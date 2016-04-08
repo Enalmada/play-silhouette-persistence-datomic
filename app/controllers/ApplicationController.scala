@@ -4,6 +4,8 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
 import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
+import models.Role
+import models.daos.WithRole
 import play.api.i18n.{ I18nSupport, MessagesApi }
 import play.api.mvc.Controller
 import utils.auth.DefaultEnv
@@ -32,6 +34,10 @@ class ApplicationController @Inject() (
    */
   def index = silhouette.SecuredAction.async { implicit request =>
     Future.successful(Ok(views.html.home(request.identity)))
+  }
+
+  def admin = silhouette.SecuredAction(WithRole(Role.Tech)).async { implicit request =>
+    Future.successful(Ok(views.html.admin(request.identity)))
   }
 
   /**

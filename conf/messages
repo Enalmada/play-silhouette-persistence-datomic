@@ -5,6 +5,7 @@ access.denied = Access denied!
 user.exists = There already exists a user with this email!
 could.not.authenticate = Could not authenticate with social provider! Please try again!
 
+admin.title = Admin
 home.title = Silhouette - Home
 sign.up.title = Silhouette - Sign Up
 sign.in.title = Silhouette - Sign In
@@ -17,6 +18,7 @@ sign.in.credentials = Sign in with your credentials
 
 error = Error!
 home = Home
+admin = Admin
 first.name = First name
 last.name = Last name
 full.name = Full name
