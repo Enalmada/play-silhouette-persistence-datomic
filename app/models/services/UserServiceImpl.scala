@@ -8,6 +8,7 @@ import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
 import models.User
 import models.daos.UserDAO
 import play.api.libs.concurrent.Execution.Implicits._
+import utils.persistence.datomic.DatomicService
 
 import scala.concurrent.Future
 
@@ -16,7 +17,10 @@ import scala.concurrent.Future
  *
  * @param userDAO The user DAO implementation.
  */
-class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
+class UserServiceImpl @Inject() (userDAO: UserDAO, myDatomisca: DatomicService) extends UserService {
+
+  implicit val conn = myDatomisca.conn
+  protected[this] val e = conn
 
   /**
    * Retrieves a user that matches the specified login info.
@@ -27,14 +31,6 @@ class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
   def retrieve(loginInfo: LoginInfo): Future[Option[User]] = userDAO.find(loginInfo)
 
   /**
-   * Saves a user.
-   *
-   * @param user The user to save.
-   * @return The saved user.
-   */
-  def save(user: User) = userDAO.save(user)
-
-  /**
    * Saves the social profile for a user.
    *
    * If a user exists for this profile then update the user, otherwise create a new user with the given profile.
@@ -42,26 +38,26 @@ class UserServiceImpl @Inject() (userDAO: UserDAO) extends UserService {
    * @param profile The social profile to save.
    * @return The user for whom the profile was saved.
    */
-  def save(profile: CommonSocialProfile) = {
+  def save(profile: CommonSocialProfile): Future[User] = {
+
     userDAO.find(profile.loginInfo).flatMap {
       case Some(user) => // Update user with profile
-        userDAO.save(user.copy(
+        User.update(user.id, user.copy(
           firstName = profile.firstName,
           lastName = profile.lastName,
           fullName = profile.fullName,
-          email = profile.email,
+          email = profile.email.get,
           avatarURL = profile.avatarURL
         ))
       case None => // Insert a new user
-        userDAO.save(User(
-          userID = UUID.randomUUID(),
-          loginInfo = profile.loginInfo,
+        User.create(User(
           firstName = profile.firstName,
           lastName = profile.lastName,
           fullName = profile.fullName,
-          email = profile.email,
+          email = profile.email.get,
           avatarURL = profile.avatarURL
-        ))
+        ), profile.loginInfo)
     }
+
   }
 }

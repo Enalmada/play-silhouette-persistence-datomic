@@ -12,14 +12,6 @@ import scala.concurrent.Future
 trait UserService extends IdentityService[User] {
 
   /**
-   * Saves a user.
-   *
-   * @param user The user to save.
-   * @return The saved user.
-   */
-  def save(user: User): Future[User]
-
-  /**
    * Saves the social profile for a user.
    *
    * If a user exists for this profile then update the user, otherwise create a new user with the given profile.

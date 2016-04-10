@@ -15,6 +15,7 @@ import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Controller
 import utils.auth.DefaultEnv
+import utils.persistence.datomic.DatomicService
 
 import scala.concurrent.Future
 
@@ -36,8 +37,12 @@ class SignUpController @Inject() (
   authInfoRepository: AuthInfoRepository,
   avatarService: AvatarService,
   passwordHasher: PasswordHasher,
+  myDatomisca: DatomicService,
   implicit val webJarAssets: WebJarAssets)
   extends Controller with I18nSupport {
+
+  implicit val conn = myDatomisca.conn
+  protected[this] val e = conn
 
   /**
    * Views the `Sign Up` page.
@@ -63,18 +68,16 @@ class SignUpController @Inject() (
             Future.successful(Redirect(routes.SignUpController.view()).flashing("error" -> Messages("user.exists")))
           case None =>
             val authInfo = passwordHasher.hash(data.password)
-            val user = User(
-              userID = UUID.randomUUID(),
-              loginInfo = loginInfo,
+            val user = User().copy(
               firstName = Some(data.firstName),
               lastName = Some(data.lastName),
               fullName = Some(data.firstName + " " + data.lastName),
-              email = Some(data.email),
+              email = data.email,
               avatarURL = None
             )
             for {
               avatar <- avatarService.retrieveURL(data.email)
-              user <- userService.save(user.copy(avatarURL = avatar))
+              user <- User.create(user.copy(avatarURL = avatar), loginInfo)
               authInfo <- authInfoRepository.add(loginInfo, authInfo)
               authenticator <- silhouette.env.authenticatorService.create(loginInfo)
               value <- silhouette.env.authenticatorService.init(authenticator)

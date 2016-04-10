@@ -36,7 +36,7 @@ class ApplicationController @Inject() (
     Future.successful(Ok(views.html.home(request.identity)))
   }
 
-  def admin = silhouette.SecuredAction(WithRole(Role.Tech)).async { implicit request =>
+  def admin = silhouette.SecuredAction(WithRole(Role.Administrator)).async { implicit request =>
     Future.successful(Ok(views.html.admin(request.identity)))
   }
 
