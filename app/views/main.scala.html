@@ -37,8 +37,9 @@
                         <li><a href="@routes.ApplicationController.admin">@Messages("admin")</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        @user.map { u =>
-                            <li><a href="@routes.ApplicationController.index">@u.fullName</a></li>
+                    @user.map { u =>
+                    <li><a href="@routes.ApplicationController.index">@u.fullName</a></li>
+                    <li><a href="@routes.PasswordChangeController.startChangePassword">@Messages("specify.password.button")</a></li>
                             <li><a href="@routes.ApplicationController.signOut">@Messages("sign.out")</a></li>
                         }.getOrElse {
                             <li><a href="@routes.SignInController.view">@Messages("sign.in")</a></li>
@@ -50,7 +51,7 @@
         </header>
         <main class="container">
             <div class="starter-template row">
-                @content
+            @content
             </div>
         </main>
         <script type="text/javascript" src="@routes.WebJarAssets.at(webJarAssets.locate("jquery.min.js"))"></script>

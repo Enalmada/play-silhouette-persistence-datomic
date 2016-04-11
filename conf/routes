@@ -14,6 +14,15 @@ POST        /signUp                          controllers.SignUpController.submit
 GET         /signIn                          controllers.SignInController.view
 POST        /signIn                          controllers.SignInController.submit
 
+
+GET         /reset                           controllers.PasswordChangeController.startResetPassword
+POST        /reset                           controllers.PasswordChangeController.handleStartResetPassword
+GET         /reset/:token                    controllers.PasswordChangeController.specifyResetPassword(token)
+POST        /reset/                          controllers.PasswordChangeController.handleResetPassword
+
+GET         /change                          controllers.PasswordChangeController.startChangePassword
+POST        /change                          controllers.PasswordChangeController.handleChangePassword
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)
 GET         /webjars/*file                   controllers.WebJarAssets.at(file)

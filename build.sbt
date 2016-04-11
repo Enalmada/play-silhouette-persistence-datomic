@@ -30,6 +30,7 @@ libraryDependencies ++= Seq(
   "com.iheart" %% "ficus" % "1.2.0",
   "com.adrianhurt" %% "play-bootstrap" % "1.1-P25-B3-SNAPSHOT",
   "com.mohiva" %% "play-silhouette-testkit" % "4.0.0-BETA4" % "test",
+  "com.typesafe.play" %% "play-mailer" % "5.0.0-M1",
   specs2 % Test,
   cache,
   filters

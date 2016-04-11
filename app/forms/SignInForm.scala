@@ -16,7 +16,7 @@ object SignInForm {
       "email" -> email,
       "password" -> nonEmptyText,
       "rememberMe" -> boolean
-    )(Data.apply)(Data.unapply)
+    )(SignInData.apply)(SignInData.unapply)
   )
 
   /**
@@ -26,7 +26,7 @@ object SignInForm {
    * @param password The password of the user.
    * @param rememberMe Indicates if the user should stay logged in on the next visit.
    */
-  case class Data(
+  case class SignInData(
     email: String,
     password: String,
     rememberMe: Boolean)
