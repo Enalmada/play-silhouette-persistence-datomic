@@ -3,26 +3,31 @@
 # ~~~~
 
 # Home page
-GET         /                                controllers.ApplicationController.index
-GET         /admin                           controllers.ApplicationController.admin
-GET         /signOut                         controllers.ApplicationController.signOut
-GET         /authenticate/:provider          controllers.SocialAuthController.authenticate(provider)
+GET         /                                   controllers.ApplicationController.index
+GET         /admin                              controllers.ApplicationController.admin
+GET         /signOut                            controllers.ApplicationController.signOut
+GET         /authenticate/:provider             controllers.SocialAuthController.authenticate(provider)
 
-GET         /signUp                          controllers.SignUpController.view
-POST        /signUp                          controllers.SignUpController.submit
+GET         /signUp                             controllers.SignUpController.view
+POST        /signUp                             controllers.SignUpController.submit
 
-GET         /signIn                          controllers.SignInController.view
-POST        /signIn                          controllers.SignInController.submit
+GET         /signIn                             controllers.SignInController.view
+POST        /signIn                             controllers.SignInController.submit
 
 
-GET         /reset                           controllers.PasswordChangeController.startResetPassword
-POST        /reset                           controllers.PasswordChangeController.handleStartResetPassword
-GET         /reset/:token                    controllers.PasswordChangeController.specifyResetPassword(token)
-POST        /reset/                          controllers.PasswordChangeController.handleResetPassword
+GET         /reset                              controllers.PasswordChangeController.startResetPassword
+POST        /reset                              controllers.PasswordChangeController.handleStartResetPassword
+GET         /reset/:token                       controllers.PasswordChangeController.specifyResetPassword(token)
+POST        /reset/                             controllers.PasswordChangeController.handleResetPassword
 
-GET         /change                          controllers.PasswordChangeController.startChangePassword
-POST        /change                          controllers.PasswordChangeController.handleChangePassword
+GET         /change                             controllers.PasswordChangeController.startChangePassword
+POST        /change                             controllers.PasswordChangeController.handleChangePassword
+
+POST        /jwt/signIn                         controllers.security.CredentialsAuthController.authenticate
+POST        /jwt/signUp                         controllers.security.SignUpController.signUp
+GET         /jwt//authenticate/:provider        controllers.security.SocialAuthController.authenticate(provider)
+POST        /jwt//authenticate/:provider        controllers.security.SocialAuthController.authenticate(provider)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                    controllers.Assets.at(path="/public", file)
-GET         /webjars/*file                   controllers.WebJarAssets.at(file)
+GET         /assets/*file                       controllers.Assets.at(path="/public", file)
+GET         /webjars/*file                      controllers.WebJarAssets.at(file)
