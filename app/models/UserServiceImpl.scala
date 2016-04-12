@@ -9,29 +9,29 @@ import utils.persistence.DatomicService
 import scala.concurrent.Future
 
 /**
-  * Handles actions to users.
-  */
-class UserServiceImpl @Inject()(myDatomisca: DatomicService) extends UserService {
+ * Handles actions to users.
+ */
+class UserServiceImpl @Inject() (myDatomisca: DatomicService) extends UserService {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
 
   /**
-    * Retrieves a user that matches the specified login info.
-    *
-    * @param loginInfo The login info to retrieve a user.
-    * @return The retrieved user or None if no user could be retrieved for the given login info.
-    */
+   * Retrieves a user that matches the specified login info.
+   *
+   * @param loginInfo The login info to retrieve a user.
+   * @return The retrieved user or None if no user could be retrieved for the given login info.
+   */
   def retrieve(loginInfo: LoginInfo): Future[Option[User]] = Future.successful(User.findByLoginInfo(loginInfo))
 
   /**
-    * Saves the social profile for a user.
-    *
-    * If a user exists for this profile then update the user, otherwise create a new user with the given profile.
-    *
-    * @param profile The social profile to save.
-    * @return The user for whom the profile was saved.
-    */
+   * Saves the social profile for a user.
+   *
+   * If a user exists for this profile then update the user, otherwise create a new user with the given profile.
+   *
+   * @param profile The social profile to save.
+   * @return The user for whom the profile was saved.
+   */
   def save(profile: CommonSocialProfile): Future[User] = {
 
     User.findByLoginInfo(profile.loginInfo) match {

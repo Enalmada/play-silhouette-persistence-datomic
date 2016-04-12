@@ -1,6 +1,6 @@
 package models
 
-import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
+import com.mohiva.play.silhouette.api.{ Identity, LoginInfo }
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
@@ -11,22 +11,22 @@ import scala.concurrent.Future
 import scala.language.reflectiveCalls
 
 /**
-  * The user object.
-  *
-  * @param firstName Maybe the first name of the authenticated user.
-  * @param lastName  Maybe the last name of the authenticated user.
-  * @param fullName  Maybe the full name of the authenticated user.
-  * @param email     Maybe the email of the authenticated provider.
-  * @param avatarURL Maybe the avatar URL of the authenticated provider.
-  */
+ * The user object.
+ *
+ * @param firstName Maybe the first name of the authenticated user.
+ * @param lastName  Maybe the last name of the authenticated user.
+ * @param fullName  Maybe the full name of the authenticated user.
+ * @param email     Maybe the email of the authenticated provider.
+ * @param avatarURL Maybe the avatar URL of the authenticated provider.
+ */
 case class User(
-                 id: Long = -1,
-                 email: String = "",
-                 firstName: Option[String] = None,
-                 lastName: Option[String] = None,
-                 fullName: Option[String] = None,
-                 avatarURL: Option[String] = None,
-                 role: Role = Role.Member) extends Identity {
+  id: Long = -1,
+  email: String = "",
+  firstName: Option[String] = None,
+  lastName: Option[String] = None,
+  fullName: Option[String] = None,
+  avatarURL: Option[String] = None,
+  role: Role = Role.Member) extends Identity {
 
   final def hasRole(checkRole: Role): Boolean = role == checkRole
 
@@ -92,23 +92,23 @@ object User extends DB[User] {
 
   implicit val reader: EntityReader[User] = (
     ID.read[Long] and
-      Schema.email.read[String] and
-      Schema.firstName.readOpt[String] and
-      Schema.lastName.readOpt[String] and
-      Schema.fullName.readOpt[String] and
-      Schema.avatarURL.readOpt[String] and
-      Schema.role.readOrElse[Role](Role.Member)
-    ) (User.apply _)
+    Schema.email.read[String] and
+    Schema.firstName.readOpt[String] and
+    Schema.lastName.readOpt[String] and
+    Schema.fullName.readOpt[String] and
+    Schema.avatarURL.readOpt[String] and
+    Schema.role.readOrElse[Role](Role.Member)
+  )(User.apply _)
 
   implicit val writer: PartialAddEntityWriter[User] = (
     ID.write[Long] and
-      Schema.email.write[String] and
-      Schema.firstName.writeOpt[String] and
-      Schema.lastName.writeOpt[String] and
-      Schema.fullName.writeOpt[String] and
-      Schema.avatarURL.writeOpt[String] and
-      Schema.role.write[Role]
-    ) (unlift(User.unapply))
+    Schema.email.write[String] and
+    Schema.firstName.writeOpt[String] and
+    Schema.lastName.writeOpt[String] and
+    Schema.fullName.writeOpt[String] and
+    Schema.avatarURL.writeOpt[String] and
+    Schema.role.write[Role]
+  )(unlift(User.unapply))
 
   def findByLoginInfo(loginInfo: LoginInfo)(implicit conn: Connection): Option[User] = {
     val query = Query(

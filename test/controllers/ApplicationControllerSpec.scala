@@ -1,10 +1,7 @@
 package controllers
 
-import java.util.UUID
-
 import com.google.inject.AbstractModule
-import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
-import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
+import com.mohiva.play.silhouette.api.{Environment, LoginInfo}
 import com.mohiva.play.silhouette.test._
 import models.User
 import net.codingwell.scalaguice.ScalaModule
@@ -12,12 +9,12 @@ import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.test.{ FakeRequest, PlaySpecification, WithApplication }
+import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 import utils.auth.DefaultEnv
 
 /**
- * Test case for the [[controllers.ApplicationController]] class.
- */
+  * Test case for the [[controllers.ApplicationController]] class.
+  */
 class ApplicationControllerSpec extends PlaySpecification with Mockito {
   sequential
 
@@ -31,7 +28,7 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
         status(redirectResult) must be equalTo SEE_OTHER
 
         val redirectURL = redirectLocation(redirectResult).getOrElse("")
-        redirectURL must contain(routes.SignInController.view().toString)
+        redirectURL must contain(controllers.security.web.routes.SignInController.view().toString)
 
         val Some(unauthorizedResult) = route(app, FakeRequest(GET, redirectURL))
 
@@ -44,7 +41,7 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
     "return 200 if user is authorized" in new Context {
       new WithApplication(application) {
         val Some(result) = route(app, FakeRequest(routes.ApplicationController.index())
-          .withAuthenticator[DefaultEnv](identity.loginInfo)
+          .withAuthenticator[DefaultEnv](identity._2)
         )
 
         status(result) must beEqualTo(OK)
@@ -53,13 +50,13 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
   }
 
   /**
-   * The context.
-   */
+    * The context.
+    */
   trait Context extends Scope {
 
     /**
-     * A fake Guice module.
-     */
+      * A fake Guice module.
+      */
     class FakeModule extends AbstractModule with ScalaModule {
       def configure() = {
         bind[Environment[DefaultEnv]].toInstance(env)
@@ -67,28 +64,26 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
     }
 
     /**
-     * An identity.
-     */
-    val identity = User(
-      userID = UUID.randomUUID(),
-      loginInfo = LoginInfo("facebook", "user@facebook.com"),
+      * An identity.
+      */
+    val identity = (User().copy(
       firstName = None,
       lastName = None,
       fullName = None,
-      email = None,
-      avatarURL = None
-    )
+      email = "user@facebook.com",
+      avatarURL = None), LoginInfo("facebook", "user@facebook.com"))
 
     /**
-     * A Silhouette fake environment.
-     */
-    implicit val env: Environment[DefaultEnv] = new FakeEnvironment[DefaultEnv](Seq(identity.loginInfo -> identity))
+      * A Silhouette fake environment.
+      */
+    implicit val env: Environment[DefaultEnv] = new FakeEnvironment[DefaultEnv](Seq(identity._2 -> identity._1))
 
     /**
-     * The application.
-     */
+      * The application.
+      */
     lazy val application = new GuiceApplicationBuilder()
       .overrides(new FakeModule)
       .build()
   }
+
 }
