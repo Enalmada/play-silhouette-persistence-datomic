@@ -1,14 +1,15 @@
-package controllers
+package controllers.security.web
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{ Silhouette, _ }
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.{ Credentials, PasswordHasher, PasswordInfo }
+import com.mohiva.play.silhouette.api.{ Silhouette, _ }
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import controllers.PasswordChangeController.ChangeInfo
+import controllers.security.web.PasswordChangeController.ChangeInfo
+import controllers.{ WebJarAssets }
 import models.TokenUser
 import models.services.{ TokenService, UserService }
 import play.api.Logger

@@ -1,4 +1,4 @@
-package controllers
+package controllers.security.web
 
 import javax.inject.Inject
 
@@ -9,6 +9,7 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
+import controllers.{ WebJarAssets }
 import forms.SignInForm
 import models.services.UserService
 import net.ceedubs.ficus.Ficus._
@@ -67,7 +68,7 @@ class SignInController @Inject() (
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(routes.ApplicationController.index())
+          val result = Redirect(controllers.routes.ApplicationController.index())
           userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               val c = configuration.underlying

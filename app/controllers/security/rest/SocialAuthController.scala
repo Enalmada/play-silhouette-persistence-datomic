@@ -1,4 +1,4 @@
-package controllers.security
+package controllers.security.rest
 
 import javax.inject.Inject
 

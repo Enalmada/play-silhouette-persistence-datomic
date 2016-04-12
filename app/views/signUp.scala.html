@@ -1,6 +1,7 @@
 @(signInForm: Form[forms.SignUpForm.SignUpData])(implicit request: RequestHeader, messages: Messages, webJarAssets: WebJarAssets)
 
 @import b3.inline.fieldConstructor
+@import controllers.security.web._
 
 @main(Messages("sign.up.title")) {
     @request.flash.get("error").map { msg =>
