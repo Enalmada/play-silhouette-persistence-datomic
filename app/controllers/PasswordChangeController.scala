@@ -2,30 +2,29 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.Silhouette
+import com.mohiva.play.silhouette.api.{ Silhouette, _ }
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.{ Credentials, PasswordHasher, PasswordInfo }
-import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.PasswordChangeController.ChangeInfo
+import models.TokenUser
+import models.services.{ TokenService, UserService }
+import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
-import play.api.mvc._
-import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits._
+import play.api.mvc._
+import utils.auth.DefaultEnv
 import utils.{ MailService, Mailer }
 
-import scala.language.postfixOps
 import scala.concurrent.Future
+import scala.language.postfixOps
 import scala.reflect.ClassTag
-import models.{ TokenUser, User }
-import models.services.{ TokenService, UserService }
-import utils.auth.DefaultEnv
+import scala.util.{ Failure, Success }
 
 /**
  * A controller to provide password change functionality
@@ -74,12 +73,19 @@ class PasswordChangeController @Inject() (
       email => {
         authInfoRepository.find(LoginInfo(CredentialsProvider.ID, email))(ClassTag(classOf[PasswordInfo])).map {
           case Some(user) => {
-            val token = TokenUser(email)
-            tokenService.create(token)
+            val newToken = new TokenUser(email = email)
+            tokenService.create(newToken).onComplete {
+              case Success(tokenUserOpt) => {
+                tokenUserOpt.foreach { token =>
+                  Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(token.id.toString).absoluteURL())(mailService, messagesApi)
+                }
+              }
+              case Failure(t) => Logger.error("handleStartResetPassword: " + t.getMessage)
+            }
 
-            Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(token.id).absoluteURL())(mailService, messagesApi)
           }
           case None => {
+            Logger.info(s"handleStartResetPassword: no user found: ${email}")
             // Don't send out to unknown
             //Mailer.forgotPasswordUnknowAddress(email)(mailService)
 
@@ -190,5 +196,7 @@ class PasswordChangeController @Inject() (
 }
 
 object PasswordChangeController {
+
   case class ChangeInfo(currentPassword: String, newPassword: String)
+
 }

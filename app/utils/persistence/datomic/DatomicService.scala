@@ -4,7 +4,7 @@ import javax.inject._
 
 import datomisca.{ Connection, Datomic }
 import datomiscadao.DB
-import models.User
+import models.{ TokenUser, User }
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 import utils.persistence.datomic.daos.{ LoginInfoImpl, OAuth1InfoImpl, OAuth2InfoImpl, PasswordInfoImpl }
@@ -70,7 +70,8 @@ class DatomicService @Inject() (env: play.Environment, config: play.api.Configur
       LoginInfoImpl.Schema.schema ++
       OAuth1InfoImpl.Schema.schema ++
       OAuth2InfoImpl.Schema.schema ++
-      PasswordInfoImpl.Schema.schema
+      PasswordInfoImpl.Schema.schema ++
+      TokenUser.Schema.schema
 
     val filteredSchema = if (check) combinedSchema.filterNot(s => DB.hasAttribute(s.ident)) else combinedSchema
 

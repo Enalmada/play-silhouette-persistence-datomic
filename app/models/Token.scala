@@ -10,5 +10,5 @@ trait Token {
    *
    * @return The token ID.
    */
-  def id: String
+  def id: Long
 }

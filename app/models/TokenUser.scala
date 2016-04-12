@@ -1,39 +1,80 @@
 package models
 
-import java.util.UUID
+import java.time.{ LocalDateTime, ZoneId }
+import java.util.Date
 
-import org.joda.time.DateTime
+import datomic.Peer
+import datomic.Util._
+import datomisca.{ Attribute, Cardinality, EntityReader, Namespace, PartialAddEntityWriter, SchemaType, Unique }
+import datomisca.DatomicMapping._
+import datomisca._
+import datomiscadao.DB
+import play.api.Logger
+import utils.persistence.datomic.DatomicService
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class TokenUser(id: String, email: String, expirationTime: DateTime, isSignUp: Boolean,
-  firstName: String, lastName: String) extends Token {
-  def isExpired: Boolean = expirationTime.isBeforeNow
+case class TokenUser(id: Long = -1, email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L), isSignUp: Boolean = false) extends Token {
+  def isExpired: Boolean = expirationTime.isBefore(LocalDateTime.now())
 }
 
-object TokenUser {
+object TokenUser extends DB[TokenUser] {
 
-  private val hoursTillExpiry = 24
+  object Schema {
 
-  def apply(email: String, isSignUp: Boolean, firstName: String, lastName: String): TokenUser =
-    TokenUser(UUID.randomUUID().toString, email, (new DateTime()).plusHours(hoursTillExpiry), isSignUp, firstName, lastName)
+    object ns {
+      val tokenUser = new Namespace("tokenUser")
+    }
 
-  def apply(email: String): TokenUser =
-    TokenUser(UUID.randomUUID().toString, email, (new DateTime()).plusHours(hoursTillExpiry), false, "", "") //naughty!
+    // Attributes
+    val email = Attribute(ns.tokenUser / "email", SchemaType.string, Cardinality.one).withUnique(Unique.identity).withDoc("email address")
+    val expirationTime = Attribute(ns.tokenUser / "expirationTime", SchemaType.instant, Cardinality.one).withDoc("time the link will expire")
+    val isSignUp = Attribute(ns.tokenUser / "isSignUp", SchemaType.boolean, Cardinality.one).withDoc("true when sign up")
 
-  val tokens = scala.collection.mutable.HashMap[String, TokenUser]()
+    val schema = Seq(
+      email, expirationTime, isSignUp
+    )
 
-  def findById(id: String): Future[Option[TokenUser]] = {
-    Future.successful(tokens.get(id))
   }
 
-  def save(token: TokenUser): Future[TokenUser] = {
-    tokens += (token.id -> token)
+  implicit val dateToLocalDateTime: Date => LocalDateTime = (date: Date) => LocalDateTime.ofInstant(date.toInstant, ZoneId.systemDefault())
+  implicit val localDateTimeToDate: LocalDateTime => Date = (ldt: LocalDateTime) => Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant)
 
-    Future.successful(token)
+  implicit val reader: EntityReader[TokenUser] = (
+    ID.read[Long] and
+    Schema.email.read[String] and
+    Schema.expirationTime.read[Date].map(dateToLocalDateTime) and
+    Schema.isSignUp.read[Boolean]
+  )(TokenUser.apply _)
+
+  implicit val writer: PartialAddEntityWriter[TokenUser] = (
+    ID.write[Long] and
+    Schema.email.write[String] and
+    Schema.expirationTime.write[Date].contramap(localDateTimeToDate) and
+    Schema.isSignUp.write[Boolean]
+  )(unlift(TokenUser.unapply))
+
+  private val hoursTillExpiry = 24L
+
+  def findById(id: Long)(implicit conn: datomisca.Connection): Future[Option[TokenUser]] = {
+    Future.successful(TokenUser.find(id))
   }
 
-  def delete(id: String): Unit = {
-    tokens.remove(id)
+  def save(tokenUser: TokenUser)(implicit conn: datomisca.Connection): Future[TokenUser] = {
+
+    val tokenUserFact = DatomicMapping.toEntity(DId(Partition.USER))(tokenUser)
+
+    for {
+      tx <- Datomic.transact(tokenUserFact)
+    } yield TokenUser.get(tx.resolve(tokenUserFact))
+
+  }
+
+  def delete(id: Long)(implicit datomicService: DatomicService): Unit = {
+    implicit val conn = datomicService.conn
+    TokenUser.retractEntity(id)
+    // Note that excision has no effect on in memory test db
+    Peer.connect(datomicService.connectionUrl("prod")).transact(datomic.Util.list(datomic.Util.list(s"[{:db/id #db/id[db.part/user], :db/excise $id }]]")))
   }
 }
