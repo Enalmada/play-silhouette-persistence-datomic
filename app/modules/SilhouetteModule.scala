@@ -49,7 +49,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[UserService].to[UserServiceImpl]
     bind[TokenService[TokenUser]].to[TokenServiceImpl]
     bind[MailService].to[MailServiceImpl]
-    bind[UserDAO].to[UserDAOImpl]
     bind[CacheLayer].to[PlayCacheLayer]
     bind[IDGenerator].toInstance(new SecureRandomIDGenerator())
     bind[PasswordHasher].toInstance(new BCryptPasswordHasher)

@@ -21,13 +21,13 @@ import scala.concurrent.Future
 /**
  * The `Sign Up` controller.
  *
- * @param messagesApi The Play messages API.
- * @param silhouette The Silhouette stack.
- * @param userService The user service implementation.
+ * @param messagesApi        The Play messages API.
+ * @param silhouette         The Silhouette stack.
+ * @param userService        The user service implementation.
  * @param authInfoRepository The auth info repository implementation.
- * @param avatarService The avatar service implementation.
- * @param passwordHasher The password hasher implementation.
- * @param webJarAssets The webjar assets implementation.
+ * @param avatarService      The avatar service implementation.
+ * @param passwordHasher     The password hasher implementation.
+ * @param webJarAssets       The webjar assets implementation.
  */
 class SignUpController @Inject() (
   val messagesApi: MessagesApi,

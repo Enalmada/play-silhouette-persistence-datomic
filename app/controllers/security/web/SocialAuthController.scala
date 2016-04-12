@@ -18,12 +18,12 @@ import scala.concurrent.Future
 /**
  * The social auth controller.
  *
- * @param messagesApi The Play messages API.
- * @param silhouette The Silhouette stack.
- * @param userService The user service implementation.
- * @param authInfoRepository The auth info service implementation.
+ * @param messagesApi            The Play messages API.
+ * @param silhouette             The Silhouette stack.
+ * @param userService            The user service implementation.
+ * @param authInfoRepository     The auth info service implementation.
  * @param socialProviderRegistry The social provider registry.
- * @param webJarAssets The webjar assets implementation.
+ * @param webJarAssets           The webjar assets implementation.
  */
 class SocialAuthController @Inject() (
   val messagesApi: MessagesApi,
