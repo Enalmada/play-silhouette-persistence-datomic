@@ -8,9 +8,7 @@ import persistence.datomic.daos._
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{ Await, Future }
+import scala.concurrent.Future
 
 object DatomicAuthService {
   implicit var connOpt: Option[Connection] = None
@@ -63,7 +61,6 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
   }
 
   def loadSchema(check: Boolean = true)(implicit conn: Connection) = {
-    implicit val db = Datomic.database
 
     val combinedSchema =
       LoginInfoImpl.Schema.schema ++
@@ -72,15 +69,7 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
         PasswordInfoImpl.Schema.schema ++
         TokenUser.Schema.schema
 
-    val filteredSchema = if (check) combinedSchema.filterNot(s => DB.hasAttribute(s.ident)) else combinedSchema
-
-    if (filteredSchema.nonEmpty) {
-      val fut = Datomic.transact(filteredSchema) map { tx =>
-        Logger.info(s"Loaded Schema: $filteredSchema")
-      }
-
-      Await.result(fut, Duration("3 seconds"))
-    }
+    DB.loadSchema(combinedSchema)
 
   }
 

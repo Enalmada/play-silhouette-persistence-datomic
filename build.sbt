@@ -24,7 +24,7 @@ libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-persistence" % "4.0.0-BETA4",
   "com.github.dwhjames" %% "datomisca" % "0.7.0",
   "com.datomic" % "datomic-free" % "0.9.5350",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.3",
+  "com.github.enalmada" %% "datomisca-dao" % "0.1.4",
   "org.webjars" %% "webjars-play" % "2.5.0",
   "net.codingwell" %% "scala-guice" % "4.0.1",
   "com.iheart" %% "ficus" % "1.2.0",
