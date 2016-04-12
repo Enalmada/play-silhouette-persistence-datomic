@@ -1,14 +1,12 @@
-package models.services
+package models
 
-import java.util.UUID
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
-import models.User
-import models.daos.UserDAO
+import persistence.datomic.DatomicAuthService
 import play.api.libs.concurrent.Execution.Implicits._
-import utils.persistence.datomic.DatomicService
+import utils.persistence.DatomicService
 
 import scala.concurrent.Future
 

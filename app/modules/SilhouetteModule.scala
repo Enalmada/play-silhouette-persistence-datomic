@@ -18,12 +18,12 @@ import com.mohiva.play.silhouette.impl.providers.openid.services.PlayOpenIDServi
 import com.mohiva.play.silhouette.impl.services._
 import com.mohiva.play.silhouette.impl.util._
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
-import models.TokenUser
-import models.daos._
-import models.services.{ TokenService, TokenServiceImpl, UserService, UserServiceImpl }
+import models._
 import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.codingwell.scalaguice.ScalaModule
+import persistence.datomic.TokenUser
+import persistence.datomic.services.{ TokenService, TokenServiceImpl }
 import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.openid.OpenIdClient

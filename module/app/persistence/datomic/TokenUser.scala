@@ -1,16 +1,12 @@
-package models
+package persistence.datomic
 
 import java.time.{ LocalDateTime, ZoneId }
 import java.util.Date
 
 import datomic.Peer
-import datomic.Util._
-import datomisca.{ Attribute, Cardinality, EntityReader, Namespace, PartialAddEntityWriter, SchemaType, Unique }
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
-import play.api.Logger
-import utils.persistence.datomic.DatomicService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -71,7 +67,7 @@ object TokenUser extends DB[TokenUser] {
 
   }
 
-  def delete(id: Long)(implicit datomicService: DatomicService): Unit = {
+  def delete(id: Long)(implicit datomicService: DatomicAuthService): Unit = {
     implicit val conn = datomicService.conn
     TokenUser.retractEntity(id)
     // Note that excision has no effect on in memory test db

@@ -1,17 +1,14 @@
-package models.daos
-
-import java.util.UUID
+package models
 
 import com.mohiva.play.silhouette.api.LoginInfo
 import datomisca.Connection
-import models.User
 
 import scala.concurrent.Future
 
 /**
  * Give access to the user object.
  */
-trait UserDAO {
+class UserDAOImpl extends UserDAO {
 
   /**
    * Finds a user by its login info.
@@ -19,7 +16,7 @@ trait UserDAO {
    * @param loginInfo The login info of the user to find.
    * @return The found user or None if no user for the given login info could be found.
    */
-  def find(loginInfo: LoginInfo)(implicit conn: Connection): Future[Option[User]]
+  def find(loginInfo: LoginInfo)(implicit conn: Connection) = Future.successful(User.findByLoginInfo(loginInfo))
 
   /**
    * Finds a user by its user ID.
@@ -27,6 +24,8 @@ trait UserDAO {
    * @param userID The ID of the user to find.
    * @return The found user or None if no user for the given ID could be found.
    */
-  def find(userID: Long)(implicit conn: Connection): Future[Option[User]]
+  def find(userID: Long)(implicit conn: Connection) = {
+    Future.successful(User.find(userID))
+  }
 
 }

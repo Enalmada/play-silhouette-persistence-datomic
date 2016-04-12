@@ -1,19 +1,4 @@
-/**
- * Copyright 2015 Mohiva Organisation (license at mohiva dot com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package utils.persistence.datomic.daos
+package persistence.datomic.daos
 
 import javax.inject.Inject
 
@@ -23,7 +8,7 @@ import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
-import utils.persistence.datomic.DatomicService
+import persistence.datomic.DatomicAuthService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -34,8 +19,8 @@ import scala.language.reflectiveCalls
  *
  * Note: Not thread safe, demo only.
  */
-final class PasswordInfoDAO @Inject() (myDatomisca: DatomicService, config: play.api.Configuration)
-  extends DelegableAuthInfoDAO[PasswordInfo] with DatomicAuthInfoDAO[PasswordInfo] {
+final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService, config: play.api.Configuration)
+    extends DelegableAuthInfoDAO[PasswordInfo] with DatomicAuthInfoDAO[PasswordInfo] {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -144,14 +129,15 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/passwordInfo ?e]
     ]
-      """)
+      """
+    )
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
   }
 
   def add(loginInfo: LoginInfo, passwordInfo: PasswordInfo)(implicit conn: Connection): Future[PasswordInfo] = {
-    implicit val loginInfoWriter = utils.persistence.datomic.daos.LoginInfoImpl.writer
+    implicit val loginInfoWriter = persistence.datomic.daos.LoginInfoImpl.writer
     val passwordInfoFact = DatomicMapping.toEntity(DId(Partition.USER))(passwordInfo)
 
     val loginInfoFact = DatomicMapping.toEntity(DId(Partition.USER))(loginInfo)

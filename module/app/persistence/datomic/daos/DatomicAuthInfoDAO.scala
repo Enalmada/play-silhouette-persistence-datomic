@@ -1,4 +1,4 @@
-package utils.persistence.datomic.daos
+package persistence.datomic.daos
 
 import com.mohiva.play.silhouette.api.{ AuthInfo, LoginInfo }
 import com.mohiva.play.silhouette.impl.providers.{ OAuth1Info, OAuth2Info }
@@ -129,7 +129,8 @@ object LoginInfoImpl extends DB[LoginInfo] {
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]
     ]
-      """)
+      """
+    )
 
     LoginInfoImpl.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey)).map(_._1)
 
@@ -183,7 +184,8 @@ object OAuth1InfoImpl extends DB[OAuth1Info] {
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/oAuth1Info ?e]
     ]
-      """)
+      """
+    )
 
     DB.headOption(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
@@ -251,7 +253,8 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/oAuth2Info ?e]
     ]
-      """)
+      """
+    )
 
     DB.headOption(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 

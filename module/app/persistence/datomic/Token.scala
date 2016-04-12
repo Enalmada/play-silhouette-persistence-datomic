@@ -1,4 +1,4 @@
-package models
+package persistence.datomic
 
 /**
  * A token used for reset password and sign up operations.

@@ -8,14 +8,13 @@ import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import forms.SignUpForm
-import models.User
-import models.services.UserService
+import models.{ User, UserService }
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{ Action, Controller }
 import utils.auth.JwtEnv
-import utils.persistence.datomic.DatomicService
+import utils.persistence.DatomicService
 
 import scala.concurrent.Future
 

@@ -4,6 +4,7 @@ import com.mohiva.play.silhouette.api.{ Identity, LoginInfo }
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
+import persistence.datomic.daos.LoginInfoImpl
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -12,8 +13,6 @@ import scala.language.reflectiveCalls
 /**
  * The user object.
  *
- * @param userID    The unique ID of the user.
- * @param loginInfo The linked login info.
  * @param firstName Maybe the first name of the authenticated user.
  * @param lastName  Maybe the last name of the authenticated user.
  * @param fullName  Maybe the full name of the authenticated user.
@@ -129,7 +128,7 @@ object User extends DB[User] {
   }
 
   def create(user: User, loginInfo: LoginInfo)(implicit conn: Connection): Future[User] = {
-    implicit val loginInfoWriter = utils.persistence.datomic.daos.LoginInfoImpl.writer
+    implicit val loginInfoWriter = LoginInfoImpl.writer
 
     val loginInfoFact = DatomicMapping.toEntity(DId(Partition.USER))(loginInfo)
     val userFact = DatomicMapping.toEntity(DId(Partition.USER))(user)

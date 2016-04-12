@@ -1,13 +1,12 @@
-package utils.persistence.datomic
+package utils.persistence
 
 import javax.inject._
 
 import datomisca.{ Connection, Datomic }
 import datomiscadao.DB
-import models.{ TokenUser, User }
+import models.User
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-import utils.persistence.datomic.daos.{ LoginInfoImpl, OAuth1InfoImpl, OAuth2InfoImpl, PasswordInfoImpl }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -66,12 +65,7 @@ class DatomicService @Inject() (env: play.Environment, config: play.api.Configur
   def loadSchema(check: Boolean = true)(implicit conn: Connection) = {
     implicit val db = Datomic.database
 
-    val combinedSchema = User.Schema.schema ++
-      LoginInfoImpl.Schema.schema ++
-      OAuth1InfoImpl.Schema.schema ++
-      OAuth2InfoImpl.Schema.schema ++
-      PasswordInfoImpl.Schema.schema ++
-      TokenUser.Schema.schema
+    val combinedSchema = User.Schema.schema
 
     val filteredSchema = if (check) combinedSchema.filterNot(s => DB.hasAttribute(s.ident)) else combinedSchema
 

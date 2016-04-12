@@ -8,10 +8,11 @@ import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.{ Credentials, PasswordHasher, PasswordInfo }
 import com.mohiva.play.silhouette.api.{ Silhouette, _ }
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import controllers.WebJarAssets
 import controllers.security.web.PasswordChangeController.ChangeInfo
-import controllers.{ WebJarAssets }
-import models.TokenUser
-import models.services.{ TokenService, UserService }
+import models.UserService
+import persistence.datomic.TokenUser
+import persistence.datomic.services.TokenService
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._

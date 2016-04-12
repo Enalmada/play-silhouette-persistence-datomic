@@ -1,7 +1,8 @@
-package models.services
+package persistence.datomic.services
+
+import persistence.datomic.Token
 
 import scala.concurrent.Future
-import models.Token
 
 /**
  * A trait that provides the means to handle auth tokens for the Silhouette module.

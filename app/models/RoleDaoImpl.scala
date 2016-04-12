@@ -1,8 +1,7 @@
-package models.daos
+package models
 
 import com.mohiva.play.silhouette.api.Authorization
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
-import models.{ Role, User }
 import play.api.mvc.Request
 
 import scala.concurrent.Future
