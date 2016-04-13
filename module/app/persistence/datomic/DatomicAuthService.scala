@@ -66,6 +66,7 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
       LoginInfoImpl.Schema.schema ++
         OAuth1InfoImpl.Schema.schema ++
         OAuth2InfoImpl.Schema.schema ++
+        OpenIDInfoImpl.Schema.schema ++
         PasswordInfoImpl.Schema.schema ++
         TokenUser.Schema.schema
 

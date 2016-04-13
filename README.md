@@ -12,7 +12,7 @@ Releases are on [mvnrepository](http://mvnrepository.com/artifact/com.github.ena
 Clone the project and run `sbt run` to see a sample application.
 
 ### To test Rest
-curl -X POST http://localhost:9000/jwt/signIn -H 'Content-Type: application/json' -d '{"email": "enalmada@gmail.com", "password": "bla!", "rememberM
+curl -X POST http://localhost:9000/rest/signIn -H 'Content-Type: application/json' -d '{"email": "enalmada@gmail.com", "password": "bla!", "rememberMe": true}'
 
 
 ### Including the Dependencies

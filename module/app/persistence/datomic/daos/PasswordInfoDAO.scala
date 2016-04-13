@@ -19,8 +19,8 @@ import scala.language.reflectiveCalls
  *
  * Note: Not thread safe, demo only.
  */
-final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService, config: play.api.Configuration)
-    extends DelegableAuthInfoDAO[PasswordInfo] with DatomicAuthInfoDAO[PasswordInfo] {
+final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService)
+    extends DelegableAuthInfoDAO[PasswordInfo] {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -54,13 +54,6 @@ final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService, config: 
   override def update(loginInfo: LoginInfo, authInfo: PasswordInfo): Future[PasswordInfo] =
     PasswordInfoImpl.update(loginInfo, authInfo)
 
-  /*
-  updated(jsonCollection.update(Json.obj("_id" -> loginInfo), merge(loginInfo, authInfo))).map {
-    case num if num > 0 => authInfo
-    case _ => throw new MongoException("Could not update password info for login info: " + loginInfo)
-  }
-  */
-
   /**
    * Saves the auth info for the given login info.
    *
@@ -78,13 +71,7 @@ final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService, config: 
     }
   }
 
-  /**
-   * Removes the auth info for the given login info.
-   *
-   * @param loginInfo The login info for which the auth info should be removed.
-   * @return A future to wait for the process to be completed.
-   */
-  override def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo))
+  override def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn))
 
 }
 

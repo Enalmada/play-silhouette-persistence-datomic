@@ -11,7 +11,7 @@ import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepo
 import net.codingwell.scalaguice.ScalaModule
 import persistence.datomic.daos._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 /**
  * Provides Guice bindings for the persistence module.
@@ -43,7 +43,7 @@ class PersistenceModule extends AbstractModule with ScalaModule {
     oauth1InfoDAO: DelegableAuthInfoDAO[OAuth1Info],
     oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info],
     openIDInfoDAO: DelegableAuthInfoDAO[OpenIDInfo]
-  ): AuthInfoRepository = {
+  )(implicit ec: ExecutionContext): AuthInfoRepository = {
 
     new DelegableAuthInfoRepository(passwordInfoDAO, oauth1InfoDAO, oauth2InfoDAO, openIDInfoDAO)
   }
