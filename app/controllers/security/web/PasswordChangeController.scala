@@ -1,5 +1,6 @@
 package controllers.security.web
 
+import java.util.UUID
 import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -59,7 +60,7 @@ class PasswordChangeController @Inject() (
   val passwordsForm = Form(tuple(
     "password1" -> passwordValidation,
     "password2" -> nonEmptyText,
-    "token" -> nonEmptyText
+    "token" -> uuid
   ) verifying (Messages("passwords.not.equal"), passwords => passwords._2 == passwords._1))
 
   private def notFoundDefault(implicit request: RequestHeader) =
@@ -78,8 +79,8 @@ class PasswordChangeController @Inject() (
             val newToken = new TokenUser(email = email)
             tokenService.create(newToken).onComplete {
               case Success(tokenUserOpt) => {
-                tokenUserOpt.foreach { token =>
-                  Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(token.id.toString).absoluteURL())(mailService, messagesApi)
+                tokenUserOpt.foreach { tokenUser =>
+                  Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(tokenUser.id).absoluteURL())(mailService, messagesApi)
                 }
               }
               case Failure(t) => Logger.error("handleStartResetPassword: " + t.getMessage)
@@ -101,10 +102,10 @@ class PasswordChangeController @Inject() (
   /**
    * Confirms the user's link based on the token and shows them a form to reset the password
    */
-  def specifyResetPassword(tokenId: String) = Action.async { implicit request =>
+  def specifyResetPassword(tokenId: UUID) = Action.async { implicit request =>
     tokenService.retrieve(tokenId).flatMap {
       case Some(token) if (!token.isSignUp && !token.isExpired) => {
-        Future.successful(Ok(views.html.auth.specifyResetPassword(tokenId, passwordsForm)))
+        Future.successful(Ok(views.html.auth.specifyResetPassword(tokenId.toString, passwordsForm)))
       }
       case Some(token) => {
         tokenService.consume(tokenId)

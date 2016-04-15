@@ -17,7 +17,7 @@ POST        /signIn                             controllers.security.web.SignInC
 
 GET         /reset                              controllers.security.web.PasswordChangeController.startResetPassword
 POST        /reset                              controllers.security.web.PasswordChangeController.handleStartResetPassword
-GET         /reset/:token                       controllers.security.web.PasswordChangeController.specifyResetPassword(token)
+GET         /reset/:token                       controllers.security.web.PasswordChangeController.specifyResetPassword(token: java.util.UUID)
 POST        /reset/                             controllers.security.web.PasswordChangeController.handleResetPassword
 
 GET         /change                             controllers.security.web.PasswordChangeController.startChangePassword

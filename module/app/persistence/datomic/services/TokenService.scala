@@ -1,5 +1,7 @@
 package persistence.datomic.services
 
+import java.util.UUID
+
 import persistence.datomic.Token
 
 import scala.concurrent.Future
@@ -20,7 +22,7 @@ trait TokenService[T <: Token] {
    * @param token The token to create.
    * @return The created token or None if the token couldn't be created.
    */
-  def create(token: T): Future[Option[T]]
+  def create(tokenUser: T): Future[Option[T]]
 
   /**
    * Retrieves an available token.
@@ -28,7 +30,7 @@ trait TokenService[T <: Token] {
    * @param id The token ID.
    * @return The retrieved token or None if no token could be retrieved for the given ID.
    */
-  def retrieve(id: String): Future[Option[T]]
+  def retrieve(id: UUID): Future[Option[T]]
 
   /**
    * Consumes a token.
@@ -41,5 +43,5 @@ trait TokenService[T <: Token] {
    *
    * @param id The ID of the token to consume.
    */
-  def consume(id: String)
+  def consume(id: UUID)
 }

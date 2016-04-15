@@ -19,7 +19,7 @@ object DatomicAuthService {
 @Singleton
 class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle) {
 
-  Logger.debug("My Datomisca initialized.")
+  Logger.debug("DatomicAuthService initialized.")
 
   var datomiscaPlayPlugin = new DatomiscaPlayPlugin(config)
 
@@ -44,7 +44,7 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
     }
 
     loadSchema()
-
+    postMigrations()
   }
 
   def testShutdown() = {
@@ -63,7 +63,8 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
   def loadSchema(check: Boolean = true)(implicit conn: Connection) = {
 
     val combinedSchema =
-      LoginInfoImpl.Schema.schema ++
+      PersistenceDBVersion.Schema.schema ++
+        LoginInfoImpl.Schema.schema ++
         OAuth1InfoImpl.Schema.schema ++
         OAuth2InfoImpl.Schema.schema ++
         OpenIDInfoImpl.Schema.schema ++
@@ -72,6 +73,11 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
 
     DB.loadSchema(combinedSchema)
 
+  }
+
+  def postMigrations() = {
+    val dbVersion = PersistenceDBVersion.getDbVersion
+    Logger.info(s"PersistenceDBVersion: ${dbVersion.version}")
   }
 
 }

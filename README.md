@@ -4,7 +4,7 @@ Play silhouette datomic persistence.
 Consult the [Silhouette documentation](http://silhouette.mohiva.com/docs) for more information. If you need help with the integration of Silhouette into your project, don't hesitate and ask questions in our [mailing list](https://groups.google.com/forum/#!forum/play-silhouette) or on [Stack Overflow](http://stackoverflow.com/questions/tagged/playframework).
 
 #### Version information
-* `2.5.0` to `2.5.x` (last: `0.1.0` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
+* `2.5.0` to `2.5.x` (last: `0.1.1` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 
 Releases are on [mvnrepository](http://mvnrepository.com/artifact/com.github.enalmada) and snapshots can be found on [sonatype](https://oss.sonatype.org/content/repositories/snapshots/com/github/enalmada).
 
@@ -21,20 +21,23 @@ curl -X POST http://localhost:9000/rest/signIn -H 'Content-Type: application/jso
 <dependency>
     <groupId>com.github.enalmada</groupId>
     <artifactId>play-silhouette-persistence-datomic_2.11</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 or
 
 ```scala
 val appDependencies = Seq(
-  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.0"
+  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.1"
 )
 ```
 
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
+* **0.1.1** [release on 2016-04-15]
+  * Fixed broken clojars resolver.
+  * added random token to tokenuser
 * **0.1.0** [release on 2016-04-12]
   * Initial release.
 

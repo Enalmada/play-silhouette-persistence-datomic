@@ -1,5 +1,6 @@
 package persistence.datomic.services
 
+import java.util.UUID
 import javax.inject.Inject
 
 import persistence.datomic.{ DatomicAuthService, TokenUser }
@@ -16,11 +17,11 @@ class TokenServiceImpl @Inject() (datomicService: DatomicAuthService) extends To
     TokenUser.save(token).map(Some(_))
   }
 
-  def retrieve(id: String): Future[Option[TokenUser]] = {
-    TokenUser.findById(id.toLong)
+  def retrieve(id: UUID): Future[Option[TokenUser]] = {
+    TokenUser.findById(id)
   }
 
-  def consume(id: String): Unit = {
-    TokenUser.delete(id.toLong)(datomicService)
+  def consume(id: UUID): Unit = {
+    TokenUser.delete(id)(datomicService)
   }
 }

@@ -1,9 +1,7 @@
 package utils
 
 import forms.SignUpForm.SignUpData
-import play.api.Play.current
-import play.api.i18n.{ Messages, MessagesApi }
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesApi
 import play.twirl.api.Html
 
 import scala.language.implicitConversions

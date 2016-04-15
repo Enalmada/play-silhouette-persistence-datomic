@@ -1,7 +1,7 @@
 package persistence.datomic
 
 import java.time.{ LocalDateTime, ZoneId }
-import java.util.Date
+import java.util.{ Date, UUID }
 
 import datomic.Peer
 import datomisca.DatomicMapping._
@@ -11,7 +11,7 @@ import datomiscadao.DB
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class TokenUser(id: Long = -1, email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L), isSignUp: Boolean = false) extends Token {
+case class TokenUser(id: UUID = UUID.randomUUID(), email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L), isSignUp: Boolean = false) extends Token {
   def isExpired: Boolean = expirationTime.isBefore(LocalDateTime.now())
 }
 
@@ -24,12 +24,13 @@ object TokenUser extends DB[TokenUser] {
     }
 
     // Attributes
-    val email = Attribute(ns.tokenUser / "email", SchemaType.string, Cardinality.one).withUnique(Unique.identity).withDoc("email address")
+    val id = Attribute(ns.tokenUser / "id", SchemaType.uuid, Cardinality.one).withUnique(Unique.identity).withDoc("random token")
+    val email = Attribute(ns.tokenUser / "email", SchemaType.string, Cardinality.one).withUnique(Unique.identity).withDoc("email address (latest action upsert)")
     val expirationTime = Attribute(ns.tokenUser / "expirationTime", SchemaType.instant, Cardinality.one).withDoc("time the link will expire")
     val isSignUp = Attribute(ns.tokenUser / "isSignUp", SchemaType.boolean, Cardinality.one).withDoc("true when sign up")
 
     val schema = Seq(
-      email, expirationTime, isSignUp
+      id, email, expirationTime, isSignUp
     )
 
   }
@@ -38,14 +39,14 @@ object TokenUser extends DB[TokenUser] {
   implicit val localDateTimeToDate: LocalDateTime => Date = (ldt: LocalDateTime) => Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant)
 
   implicit val reader: EntityReader[TokenUser] = (
-    ID.read[Long] and
+    Schema.id.read[UUID] and
     Schema.email.read[String] and
     Schema.expirationTime.read[Date].map(dateToLocalDateTime) and
     Schema.isSignUp.read[Boolean]
   )(TokenUser.apply _)
 
   implicit val writer: PartialAddEntityWriter[TokenUser] = (
-    ID.write[Long] and
+    Schema.id.write[UUID] and
     Schema.email.write[String] and
     Schema.expirationTime.write[Date].contramap(localDateTimeToDate) and
     Schema.isSignUp.write[Boolean]
@@ -53,8 +54,8 @@ object TokenUser extends DB[TokenUser] {
 
   private val hoursTillExpiry = 24L
 
-  def findById(id: Long)(implicit conn: datomisca.Connection): Future[Option[TokenUser]] = {
-    Future.successful(TokenUser.find(id))
+  def findById(id: UUID)(implicit conn: datomisca.Connection): Future[Option[TokenUser]] = {
+    Future.successful(TokenUser.find(LookupRef(TokenUser.Schema.id, id)))
   }
 
   def save(tokenUser: TokenUser)(implicit conn: datomisca.Connection): Future[TokenUser] = {
@@ -67,9 +68,9 @@ object TokenUser extends DB[TokenUser] {
 
   }
 
-  def delete(id: Long)(implicit datomicService: DatomicAuthService): Unit = {
+  def delete(id: UUID)(implicit datomicService: DatomicAuthService): Unit = {
     implicit val conn = datomicService.conn
-    TokenUser.retractEntity(id)
+    TokenUser.retractEntity(LookupRef(TokenUser.Schema.id, id))
     // Note that excision has no effect on in memory test db
     Peer.connect(datomicService.connectionUrl("prod")).transact(datomic.Util.list(datomic.Util.list(s"[{:db/id #db/id[db.part/user], :db/excise $id }]]")))
   }
