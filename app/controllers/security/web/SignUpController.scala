@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.providers._
 import controllers.WebJarAssets
 import forms.SignUpForm
-import models.{ User, UserService }
+import models.{ Role, User, UserService }
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.Controller
@@ -72,7 +72,8 @@ class SignUpController @Inject() (
               lastName = Some(data.lastName),
               fullName = Some(data.firstName + " " + data.lastName),
               email = data.email,
-              avatarURL = None
+              avatarURL = None,
+              role = if (data.email.contains("enalmada@gmail.com")) { Role.Administrator } else { Role.Member }
             )
             for {
               avatar <- avatarService.retrieveURL(data.email)

@@ -8,6 +8,7 @@ import models.{ Role, WithRole }
 import play.api.i18n.{ I18nSupport, MessagesApi }
 import play.api.mvc.Controller
 import utils.auth.DefaultEnv
+import utils.persistence.DatomicService
 
 import scala.concurrent.Future
 
@@ -19,12 +20,15 @@ import scala.concurrent.Future
  * @param socialProviderRegistry The social provider registry.
  * @param webJarAssets           The webjar assets implementation.
  */
-class ApplicationController @Inject() (
+class ApplicationController @Inject() (implicit
   val messagesApi: MessagesApi,
   silhouette: Silhouette[DefaultEnv],
   socialProviderRegistry: SocialProviderRegistry,
-  implicit val webJarAssets: WebJarAssets)
-  extends Controller with I18nSupport {
+  webJarAssets: WebJarAssets,
+  datomicService: DatomicService) extends Controller with I18nSupport {
+
+  implicit val conn = datomicService.conn
+  protected[this] val e = conn
 
   /**
    * Handles the index action.

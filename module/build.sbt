@@ -1,6 +1,6 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.1"
+version := "0.1.2"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 

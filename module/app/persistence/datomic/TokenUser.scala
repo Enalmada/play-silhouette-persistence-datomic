@@ -58,6 +58,16 @@ object TokenUser extends DB[TokenUser] {
     Future.successful(TokenUser.find(LookupRef(TokenUser.Schema.id, id)))
   }
 
+  def findAll()(implicit conn: Connection): Seq[TokenUser] = {
+    val queryAll = Query(""" [ :find ?a :where [?a :tokenUser/email] ] """)
+    list(Datomic.q(queryAll, Datomic.database))
+  }
+
+  def findByEmail(email: String)(implicit conn: Connection): Seq[TokenUser] = {
+    val query = Query(""" [ :find ?a :in $ ?email :where [?a :tokenUser/email ?email] ] """)
+    list(Datomic.q(query, Datomic.database, email))
+  }
+
   def save(tokenUser: TokenUser)(implicit conn: datomisca.Connection): Future[TokenUser] = {
 
     val tokenUserFact = DatomicMapping.toEntity(DId(Partition.USER))(tokenUser)

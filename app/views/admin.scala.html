@@ -1,4 +1,4 @@
-@(user: models.User)(implicit messages: Messages, webJarAssets: WebJarAssets)
+@(user: models.User)(implicit messages: Messages, webJarAssets: WebJarAssets, conn: datomisca.Connection)
 
 @main(Messages("admin.title"), Some(user)) {
     <div class="user col-md-6 col-md-offset-3">
@@ -26,5 +26,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="panel panel-default">
+                <!-- Default panel contents -->
+            <div class="panel-heading">My Tokens</div>
+
+                <!-- List group -->
+            <ul class="list-group">
+            @for(tokenUser <- persistence.datomic.TokenUser.findByEmail(user.email)) {
+                <li class="list-group-item">@tokenUser.id @tokenUser.email @tokenUser.expirationTime @tokenUser.isSignUp</li>
+            }
+            </ul>
+        </div>
+
+
+        <div class="panel panel-default">
+                <!-- Default panel contents -->
+            <div class="panel-heading">All Tokens</div>
+
+                <!-- List group -->
+            <ul class="list-group">
+            @for(tokenUser <- persistence.datomic.TokenUser.findAll()) {
+
+                <li class="list-group-item">@tokenUser.id @tokenUser.email @tokenUser.expirationTime @tokenUser.isSignUp</li>
+            }
+            </ul>
+        </div>
+
+
     </div>
 }
