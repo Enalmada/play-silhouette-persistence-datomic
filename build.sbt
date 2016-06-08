@@ -4,7 +4,7 @@ import scalariform.formatter.preferences._
 
 name := "play-silhouette-seed"
 
-version := "4.0.0-BETA4"
+version := "4.0.0-RC1"
 
 scalaVersion := "2.11.8"
 
@@ -19,17 +19,18 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers ++= Seq(Resolver.bintrayRepo("dwhjames", "maven"), "clojars" at "https://clojars.org/repo")
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "4.0.0-BETA4",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0-BETA4",
-  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0-BETA4",
+  "com.mohiva" %% "play-silhouette" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0-RC1",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0-RC1",
   "com.github.dwhjames" %% "datomisca" % "0.7.0",
-  "com.datomic" % "datomic-free" % "0.9.5350",
+  "com.datomic" % "datomic-free" % "0.9.5372",
   "com.github.enalmada" %% "datomisca-dao" % "0.1.4",
-  "org.webjars" %% "webjars-play" % "2.5.0",
+  "org.webjars" %% "webjars-play" % "2.5.0-2",
   "net.codingwell" %% "scala-guice" % "4.0.1",
-  "com.iheart" %% "ficus" % "1.2.0",
+  "com.iheart" %% "ficus" % "1.2.6",
   "com.adrianhurt" %% "play-bootstrap" % "1.1-P25-B3-SNAPSHOT",
-  "com.mohiva" %% "play-silhouette-testkit" % "4.0.0-BETA4" % "test",
+  "com.mohiva" %% "play-silhouette-testkit" % "4.0.0-RC1" % "test",
   "com.typesafe.play" %% "play-mailer" % "5.0.0-M1",
   specs2 % Test,
   cache,
