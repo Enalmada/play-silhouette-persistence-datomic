@@ -79,6 +79,7 @@ class SignInController @Inject() (
                     idleTimeout = c.getAs[FiniteDuration]("silhouette.authenticator.rememberMe.authenticatorIdleTimeout"),
                     cookieMaxAge = c.getAs[FiniteDuration]("silhouette.authenticator.rememberMe.cookieMaxAge")
                   )
+
                 case authenticator => authenticator
               }.flatMap { authenticator =>
                 silhouette.env.eventBus.publish(LoginEvent(user, request))

@@ -11,7 +11,7 @@ import datomiscadao.DB
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class TokenUser(id: UUID = UUID.randomUUID(), email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L), isSignUp: Boolean = false) extends Token {
+case class TokenUser(id: UUID = UUID.randomUUID(), email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L * 14), isSignUp: Boolean = false) extends Token {
   def isExpired: Boolean = expirationTime.isBefore(LocalDateTime.now())
 }
 
