@@ -58,6 +58,12 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
     lifecycle.addStopHook { () =>
       Future.successful(testShutdown())
     }
+  } else {
+    lifecycle.addStopHook { () =>
+      conn.release()
+      Datomic.shutdown(false)
+      Future.successful(true)
+    }
   }
 
   def loadSchema(check: Boolean = true)(implicit conn: Connection) = {
