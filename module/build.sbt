@@ -1,22 +1,22 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.5"
+version := "0.1.6"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.2"
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "4.0.0" % "provided",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0" % "provided",
-  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0" % "provided",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0" % "provided",
-  "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
-  "com.github.dwhjames" %% "datomisca" % "0.7.0" % "provided",
+  "com.mohiva" %% "play-silhouette" % "5.0.0-SNAPSHOT" % "provided",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0-SNAPSHOT" % "provided",
+  "com.mohiva" %% "play-silhouette-persistence" % "5.0.0-SNAPSHOT" % "provided",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0-SNAPSHOT" % "provided",
+  "com.mohiva" %% "play-silhouette-testkit" % "5.0.0-SNAPSHOT" % "test",
+  "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
   "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.4" % "provided",
+  "com.github.enalmada" %% "datomisca-dao" % "0.1.7" % "provided",
   "net.codingwell" %% "scala-guice" % "4.1.0" % "provided",
-  "com.iheart" %% "ficus" % "1.4.0" % "provided",
+  "com.iheart" %% "ficus" % "1.4.1" % "provided",
   ws,
   specs2 % Test
 )
@@ -25,7 +25,12 @@ scalacOptions in Test ++= Seq("-Yrangepos")
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
-resolvers ++= Seq(Resolver.bintrayRepo("dwhjames", "maven"), "clojars" at "https://clojars.org/repo")
+
+resolvers += Resolver.sonatypeRepo("releases")
+
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+resolvers ++= Seq(Resolver.bintrayRepo("thyming", "maven"), "clojars" at "https://clojars.org/repo")
 
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.

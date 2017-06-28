@@ -4,9 +4,9 @@ import scalariform.formatter.preferences._
 
 name := "play-silhouette-seed"
 
-version := "4.0.0"
+version := "5.0.0"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.2"
 
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
@@ -16,24 +16,26 @@ resolvers += Resolver.sonatypeRepo("releases")
 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-resolvers ++= Seq(Resolver.bintrayRepo("dwhjames", "maven"), "clojars" at "https://clojars.org/repo")
+resolvers ++= Seq(Resolver.bintrayRepo("thyming", "maven"), "clojars" at "https://clojars.org/repo")
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
-  "com.github.dwhjames" %% "datomisca" % "0.7.0",
+  guice,
+  ehcache,
+  "com.mohiva" %% "play-silhouette" % "5.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-persistence" % "5.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-testkit" % "5.0.0-SNAPSHOT" % "test",
+  "com.quartethealth" %% "datomisca" % "0.7.1",
   "com.datomic" % "datomic-free" % "0.9.5544",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.4",
-  "org.webjars" %% "webjars-play" % "2.5.0-4",
+  "com.github.enalmada" %% "datomisca-dao" % "0.1.7",
+  //"org.webjars" %% "webjars-play" % "2.6.0-M1",
   "net.codingwell" %% "scala-guice" % "4.1.0",
-  "com.iheart" %% "ficus" % "1.4.0",
-  "com.adrianhurt" %% "play-bootstrap" % "1.1-P25-B3",
-  "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
-  "com.typesafe.play" %% "play-mailer" % "5.0.0",
+  "com.iheart" %% "ficus" % "1.4.1",
+  "com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B3-SNAPSHOT",
+  "com.typesafe.play" %% "play-mailer" % "6.0.0",
+  "com.typesafe.play" %% "play-mailer-guice" % "6.0.0",
   specs2 % Test,
-  cache,
   filters
 )
 
@@ -43,6 +45,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala).aggregate(module
 
 routesGenerator := InjectedRoutesGenerator
 
+/*
 scalacOptions ++= Seq(
   "-deprecation", // Emit warning and location for usages of deprecated APIs.
   "-feature", // Emit warning and location for usages of features that should be imported explicitly.
@@ -55,6 +58,7 @@ scalacOptions ++= Seq(
   "-Ywarn-nullary-override", // Warn when non-nullary overrides nullary, e.g. def foo() over def foo.
   "-Ywarn-numeric-widen" // Warn when numerics are widened.
 )
+*/
 
 //********************************************************
 // Scalariform settings

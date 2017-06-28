@@ -8,6 +8,7 @@ import models.User
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object DatomicService {
@@ -67,7 +68,7 @@ class DatomicService @Inject() (env: play.Environment, config: play.api.Configur
   }
 
   def loadSchema(check: Boolean = true)(implicit conn: Connection) = {
-    implicit val db = Datomic.database
+    // implicit val db = Datomic.database
 
     val combinedSchema = User.Schema.schema
     DB.loadSchema(combinedSchema, check)

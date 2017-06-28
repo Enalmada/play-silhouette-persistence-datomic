@@ -1,7 +1,7 @@
 package utils
 
 import forms.SignUpForm.SignUpData
-import play.api.i18n.MessagesApi
+import play.api.i18n.{ MessagesApi, MessagesProvider }
 import play.twirl.api.Html
 
 import scala.language.implicitConversions
@@ -10,17 +10,17 @@ object Mailer {
 
   implicit def html2String(html: Html): String = html.toString
 
-  def welcome(signUpData: SignUpData, link: String)(implicit mailService: MailService, messagesApi: MessagesApi) {
+  def welcome(signUpData: SignUpData, link: String)(implicit mailService: MailService, messagesProvider: MessagesProvider) {
     mailService.sendEmailAsync(signUpData.email)(
-      subject = messagesApi("mail.welcome.subject"),
+      subject = messagesProvider.messages("mail.welcome.subject"),
       bodyHtml = link,
       bodyText = link
     )
   }
 
-  def forgotPassword(email: String, link: String)(implicit mailService: MailService, messagesApi: MessagesApi) {
+  def forgotPassword(email: String, link: String)(implicit mailService: MailService, messagesProvider: MessagesProvider) {
     mailService.sendEmailAsync(email)(
-      subject = messagesApi("mail.forgotpwd.subject"),
+      subject = messagesProvider.messages("mail.forgotpwd.subject"),
       bodyHtml = link,
       bodyText = link
     )

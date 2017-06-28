@@ -7,7 +7,7 @@ import datomiscadao.DB
 import persistence.datomic.daos._
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object DatomicAuthService {
@@ -58,13 +58,16 @@ class DatomicAuthService @Inject() (env: play.Environment, config: play.api.Conf
     lifecycle.addStopHook { () =>
       Future.successful(testShutdown())
     }
-  } else {
+  }
+  /*  I still get some errors...gonna leave it
+   else {
     lifecycle.addStopHook { () =>
       conn.release()
       Datomic.shutdown(false)
       Future.successful(true)
     }
   }
+  */
 
   def loadSchema(check: Boolean = true)(implicit conn: Connection) = {
 

@@ -9,14 +9,13 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
-import controllers.WebJarAssets
 import forms.SignInForm
 import models.UserService
 import net.ceedubs.ficus.Ficus._
 import play.api.Configuration
-import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
+import play.api.i18n.{ I18nSupport, Messages }
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.mvc.Controller
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.DefaultEnv
 
 import scala.concurrent.Future
@@ -37,23 +36,22 @@ import scala.language.postfixOps
  * @param webJarAssets           The webjar assets implementation.
  */
 class SignInController @Inject() (
-  val messagesApi: MessagesApi,
+  val components: ControllerComponents,
   silhouette: Silhouette[DefaultEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
   credentialsProvider: CredentialsProvider,
   socialProviderRegistry: SocialProviderRegistry,
   configuration: Configuration,
-  clock: Clock,
-  implicit val webJarAssets: WebJarAssets)
-  extends Controller with I18nSupport {
+  clock: Clock)
+  extends AbstractController(components) with I18nSupport {
 
   /**
    * Views the `Sign In` page.
    *
    * @return The result to display.
    */
-  def view = silhouette.UnsecuredAction.async { implicit request =>
+  def view = silhouette.UnsecuredAction.async(parse.default) { implicit request =>
     Future.successful(Ok(views.html.signIn(SignInForm.form, socialProviderRegistry)))
   }
 
@@ -62,7 +60,7 @@ class SignInController @Inject() (
    *
    * @return The result to display.
    */
-  def submit = silhouette.UnsecuredAction.async { implicit request =>
+  def submit = silhouette.UnsecuredAction.async(parse.default) { implicit request =>
     SignInForm.form.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.signIn(form, socialProviderRegistry))),
       data => {

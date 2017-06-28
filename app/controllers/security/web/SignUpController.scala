@@ -7,12 +7,11 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.providers._
-import controllers.WebJarAssets
 import forms.SignUpForm
 import models.{ Role, User, UserService }
-import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
+import play.api.i18n.{ I18nSupport, Messages }
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.mvc.Controller
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.DefaultEnv
 import utils.persistence.DatomicService
 
@@ -30,15 +29,14 @@ import scala.concurrent.Future
  * @param webJarAssets       The webjar assets implementation.
  */
 class SignUpController @Inject() (
-  val messagesApi: MessagesApi,
+  components: ControllerComponents,
   silhouette: Silhouette[DefaultEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
   avatarService: AvatarService,
   passwordHasher: PasswordHasher,
-  myDatomisca: DatomicService,
-  implicit val webJarAssets: WebJarAssets)
-  extends Controller with I18nSupport {
+  myDatomisca: DatomicService)
+  extends AbstractController(components) with I18nSupport {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -48,7 +46,7 @@ class SignUpController @Inject() (
    *
    * @return The result to display.
    */
-  def view = silhouette.UnsecuredAction.async { implicit request =>
+  def view = silhouette.UnsecuredAction.async(parse.default) { implicit request =>
     Future.successful(Ok(views.html.signUp(SignUpForm.form)))
   }
 
@@ -57,7 +55,7 @@ class SignUpController @Inject() (
    *
    * @return The result to display.
    */
-  def submit = silhouette.UnsecuredAction.async { implicit request =>
+  def submit = silhouette.UnsecuredAction.async(parse.default) { implicit request =>
     SignUpForm.form.bindFromRequest.fold(
       form => Future.successful(BadRequest(views.html.signUp(form))),
       data => {
@@ -73,7 +71,11 @@ class SignUpController @Inject() (
               fullName = Some(data.firstName + " " + data.lastName),
               email = data.email,
               avatarURL = None,
-              role = if (data.email.contains("enalmada@gmail.com")) { Role.Administrator } else { Role.Member }
+              role = if (data.email.contains("enalmada@gmail.com")) {
+                Role.Administrator
+              } else {
+                Role.Member
+              }
             )
             for {
               avatar <- avatarService.retrieveURL(data.email)

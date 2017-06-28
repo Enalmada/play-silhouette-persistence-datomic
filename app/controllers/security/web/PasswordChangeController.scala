@@ -3,13 +3,13 @@ package controllers.security.web
 import java.util.UUID
 import javax.inject.Inject
 
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.{ Credentials, PasswordHasher, PasswordInfo }
 import com.mohiva.play.silhouette.api.{ Silhouette, _ }
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
-import controllers.WebJarAssets
 import controllers.security.web.PasswordChangeController.ChangeInfo
 import models.UserService
 import persistence.datomic.TokenUser
@@ -18,7 +18,7 @@ import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
-import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
+import play.api.i18n._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import utils.auth.DefaultEnv
@@ -32,8 +32,8 @@ import scala.util.{ Failure, Success }
 /**
  * A controller to provide password change functionality
  */
-class PasswordChangeController @Inject() (
-  val messagesApi: MessagesApi,
+class PasswordChangeController @Inject() (implicit
+  components: ControllerComponents,
   silhouette: Silhouette[DefaultEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
@@ -41,9 +41,8 @@ class PasswordChangeController @Inject() (
   avatarService: AvatarService,
   passwordHasher: PasswordHasher,
   tokenService: TokenService[TokenUser],
-  mailService: MailService,
-  implicit val webJarAssets: WebJarAssets)
-  extends Controller with I18nSupport {
+  mailService: MailService)
+  extends AbstractController(components) with I18nSupport {
 
   val providerId = CredentialsProvider.ID
   val Email = "email"
@@ -57,20 +56,25 @@ class PasswordChangeController @Inject() (
     Email -> email.verifying(nonEmpty)
   )
 
-  val passwordsForm = Form(tuple(
+  def passwordsForm()(implicit messagesProvider: MessagesProvider) = Form(tuple(
     "password1" -> passwordValidation,
     "password2" -> nonEmptyText,
     "token" -> uuid
-  ) verifying (Messages("passwords.not.equal"), passwords => passwords._2 == passwords._1))
+  ) verifying (messagesProvider.messages("passwords.not.equal"), passwords => passwords._2 == passwords._1))
 
   private def notFoundDefault(implicit request: RequestHeader) =
     Future.successful(NotFound(views.html.auth.invalidToken()))
 
-  def startResetPassword = Action.async { implicit request =>
-    Future.successful(Ok(views.html.auth.startResetPassword(pwResetForm)))
+  // Action and parse now use the injected components
+  def foo = Action(parse.default) { implicit request =>
+    Ok(views.html.auth.startResetPassword(pwResetForm))
   }
 
-  def handleStartResetPassword = Action.async { implicit request =>
+  def startResetPassword = Action(parse.default) { implicit request =>
+    Ok(views.html.auth.startResetPassword(pwResetForm))
+  }
+
+  def handleStartResetPassword = Action.async(parse.default) { implicit request =>
     pwResetForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(views.html.auth.startResetPassword(errors))),
       email => {
@@ -80,7 +84,7 @@ class PasswordChangeController @Inject() (
             tokenService.create(newToken).onComplete {
               case Success(tokenUserOpt) => {
                 tokenUserOpt.foreach { tokenUser =>
-                  Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(tokenUser.id).absoluteURL())(mailService, messagesApi)
+                  Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(tokenUser.id).absoluteURL())
                 }
               }
               case Failure(t) => Logger.error("handleStartResetPassword: " + t.getMessage)
@@ -102,7 +106,7 @@ class PasswordChangeController @Inject() (
   /**
    * Confirms the user's link based on the token and shows them a form to reset the password
    */
-  def specifyResetPassword(tokenId: UUID) = Action.async { implicit request =>
+  def specifyResetPassword(tokenId: UUID) = Action.async(parse.default) { implicit request =>
     tokenService.retrieve(tokenId).flatMap {
       case Some(token) if (!token.isSignUp && !token.isExpired) => {
         Future.successful(Ok(views.html.auth.specifyResetPassword(tokenId.toString, passwordsForm)))
@@ -120,7 +124,7 @@ class PasswordChangeController @Inject() (
   /**
    * Saves the new password and authenticates the user
    */
-  def handleResetPassword = Action.async { implicit request =>
+  def handleResetPassword = Action.async(parse.default) { implicit request =>
     passwordsForm.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(views.html.auth.specifyResetPassword(formWithErrors.data("token"), formWithErrors))),
       passwords => {
@@ -158,25 +162,26 @@ class PasswordChangeController @Inject() (
    * CHANGE PASSWORD - Can only be done whilst user is logged in
    */
 
-  val changePasswordForm = Form[ChangeInfo](
+  def changePasswordForm()(implicit messagesProvider: MessagesProvider) = Form[ChangeInfo](
     mapping(
       "currentPassword" -> nonEmptyText,
       "newPassword" -> tuple(
         "password1" -> passwordValidation,
         "password2" -> nonEmptyText
-      ).verifying(Messages("passwords.not.equal"), newPassword => newPassword._2 == newPassword._1)
+      ).verifying(messagesProvider.messages("passwords.not.equal"), newPassword => newPassword._2 == newPassword._1)
     )((currentPassword, newPassword) => ChangeInfo(currentPassword, newPassword._1)) //apply
     (data => Some((data.currentPassword, (data.newPassword, data.newPassword)))) //unapply
   )
 
-  def startChangePassword = silhouette.SecuredAction.async { implicit request =>
+  def startChangePassword = silhouette.SecuredAction.async(parse.default) { implicit request =>
     Future.successful(Ok(views.html.auth.changePassword(request.identity, changePasswordForm)))
   }
 
   /**
    * Saves the new password and authenticates the user
    */
-  def handleChangePassword = silhouette.SecuredAction.async { implicit request =>
+  def handleChangePassword = silhouette.SecuredAction.async(parse.default) { implicit request =>
+
     changePasswordForm.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(views.html.auth.changePassword(request.identity, formWithErrors))),
       changeInfo => {
