@@ -1,20 +1,20 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.6"
+version := "0.1.7"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.4"
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "5.0.0-SNAPSHOT" % "provided",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.0-SNAPSHOT" % "provided",
-  "com.mohiva" %% "play-silhouette-persistence" % "5.0.0-SNAPSHOT" % "provided",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.0-SNAPSHOT" % "provided",
-  "com.mohiva" %% "play-silhouette-testkit" % "5.0.0-SNAPSHOT" % "test",
+  "com.mohiva" %% "play-silhouette" % "5.0.3" % "provided",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.3" % "provided",
+  "com.mohiva" %% "play-silhouette-persistence" % "5.0.3" % "provided",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.3" % "provided",
+  "com.mohiva" %% "play-silhouette-testkit" % "5.0.3" % "test",
   "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
   "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.7" % "provided",
+  "com.github.enalmada" %% "datomisca-dao" % "0.1.11" % "provided",
   "net.codingwell" %% "scala-guice" % "4.1.0" % "provided",
   "com.iheart" %% "ficus" % "1.4.1" % "provided",
   ws,
@@ -87,3 +87,6 @@ pomExtra in Global := {
 }
 
 credentials += Credentials(Path.userHome / ".sbt" / "sonatype.credentials")
+
+// https://github.com/xerial/sbt-sonatype/issues/30
+sources in (Compile, doc) := Seq()
