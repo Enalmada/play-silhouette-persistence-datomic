@@ -1,22 +1,22 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.7"
+version := "0.1.8"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.8"
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "5.0.3" % "provided",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "5.0.3" % "provided",
-  "com.mohiva" %% "play-silhouette-persistence" % "5.0.3" % "provided",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "5.0.3" % "provided",
-  "com.mohiva" %% "play-silhouette-testkit" % "5.0.3" % "test",
+  "com.mohiva" %% "play-silhouette" % "6.0.0-RC1" % "provided",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "6.0.0-RC1" % "provided",
+  "com.mohiva" %% "play-silhouette-persistence" % "6.0.0-RC1" % "provided",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "6.0.0-RC1" % "provided",
+  "com.mohiva" %% "play-silhouette-testkit" % "6.0.0-RC1" % "test",
   "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
   "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
   "com.github.enalmada" %% "datomisca-dao" % "0.1.11" % "provided",
-  "net.codingwell" %% "scala-guice" % "4.1.0" % "provided",
-  "com.iheart" %% "ficus" % "1.4.1" % "provided",
+  "net.codingwell" %% "scala-guice" % "4.2.3" % "provided",
+  "com.iheart" %% "ficus" % "1.4.6" % "provided",
   ws,
   specs2 % Test
 )

@@ -18,7 +18,7 @@ import scala.language.reflectiveCalls
  * The DAO to persist the OAuth1 information.
  */
 final class OAuth1InfoDAO @Inject() (myDatomisca: DatomicAuthService)
-    extends DelegableAuthInfoDAO[OAuth1Info] {
+  extends DelegableAuthInfoDAO[OAuth1Info] {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -85,20 +85,17 @@ object OAuth1InfoImpl extends DB[OAuth1Info] {
     val secret = Attribute(ns.oAuth1Info / "secret", SchemaType.string, Cardinality.one).withDoc("The consumer secret")
 
     val schema = Seq(
-      token, secret
-    )
+      token, secret)
 
   }
 
   implicit val reader: EntityReader[OAuth1Info] = (
     Schema.token.read[String] and
-    Schema.secret.read[String]
-  )(OAuth1Info.apply _)
+    Schema.secret.read[String])(OAuth1Info.apply _)
 
   implicit val writer: PartialAddEntityWriter[OAuth1Info] = (
     Schema.token.write[String] and
-    Schema.secret.write[String]
-  )(unlift(OAuth1Info.unapply))
+    Schema.secret.write[String])(unlift(OAuth1Info.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OAuth1Info)] = {
     val query = Query(
@@ -111,8 +108,7 @@ object OAuth1InfoImpl extends DB[OAuth1Info] {
           [?l :loginInfo/providerKey ?providerKey]
           [?l :loginInfo/oAuth1Info ?e]
       ]
-      """
-    )
+      """)
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
@@ -140,8 +136,7 @@ object OAuth1InfoImpl extends DB[OAuth1Info] {
 
     val passwordInfoFacts: Seq[TxData] = Seq(
       DB.factOrNone(o.token, oAuth1Info.token, Schema.token -> oAuth1Info.token),
-      DB.factOrNone(o.secret, oAuth1Info.secret, Schema.secret -> oAuth1Info.secret)
-    ).flatten
+      DB.factOrNone(o.secret, oAuth1Info.secret, Schema.secret -> oAuth1Info.secret)).flatten
 
     for {
       tx <- Datomic.transact(passwordInfoFacts)

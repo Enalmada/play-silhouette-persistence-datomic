@@ -26,20 +26,17 @@ object LoginInfoImpl extends DB[LoginInfo] {
 
     val schema = Seq(
       providerId, providerKey,
-      passwordInfo, oAuth1Info, oAuth2Info, openIdInfo
-    )
+      passwordInfo, oAuth1Info, oAuth2Info, openIdInfo)
 
   }
 
   implicit val reader: EntityReader[LoginInfo] = (
     Schema.providerId.read[String] and
-    Schema.providerKey.read[String]
-  )(LoginInfo.apply _)
+    Schema.providerKey.read[String])(LoginInfo.apply _)
 
   implicit val writer: PartialAddEntityWriter[LoginInfo] = (
     Schema.providerId.write[String] and
-    Schema.providerKey.write[String]
-  )(unlift(LoginInfo.unapply))
+    Schema.providerKey.write[String])(unlift(LoginInfo.unapply))
 
   def find(loginInfo: LoginInfo)(implicit conn: Connection): Option[Long] = {
     val query = Query(
@@ -51,8 +48,7 @@ object LoginInfoImpl extends DB[LoginInfo] {
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]
     ]
-      """
-    )
+      """)
 
     LoginInfoImpl.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey)).map(_._1)
 

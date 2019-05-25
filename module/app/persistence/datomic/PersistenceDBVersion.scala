@@ -8,8 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 case class PersistenceDBVersion(
   id: Long = -1,
-  version: Int = 0
-)
+  version: Int = 0)
 
 object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
@@ -27,13 +26,11 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
   implicit val reader: EntityReader[PersistenceDBVersion] = (
     ID.read[Long] and
-    Schema.version.read[Int]
-  )(PersistenceDBVersion.apply _)
+    Schema.version.read[Int])(PersistenceDBVersion.apply _)
 
   implicit val writer: PartialAddEntityWriter[PersistenceDBVersion] = (
     ID.write[Long] and
-    Schema.version.write[Int]
-  )(unlift(PersistenceDBVersion.unapply))
+    Schema.version.write[Int])(unlift(PersistenceDBVersion.unapply))
 
   def create(dbVersion: PersistenceDBVersion)(implicit conn: Connection): Long = {
 
@@ -48,8 +45,7 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
     val o = PersistenceDBVersion.get(id)
 
     val facts: TraversableOnce[TxData] = Seq(
-      DB.factOrNone(o.version, dbVersion.version, Schema.version -> dbVersion.version)
-    ).flatten
+      DB.factOrNone(o.version, dbVersion.version, Schema.version -> dbVersion.version)).flatten
 
     DB.transactAndWait(facts)
 
@@ -62,8 +58,7 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
       :where
         [?e :persistenceDBVersion/version]
     ]
-    """
-  )
+    """)
 
   def getDbVersion()(implicit conn: Connection): PersistenceDBVersion = {
 

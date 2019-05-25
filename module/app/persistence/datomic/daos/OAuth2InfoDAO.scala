@@ -18,7 +18,7 @@ import scala.language.reflectiveCalls
  * The DAO to persist the OAuth2 information.
  */
 final class OAuth2InfoDAO @Inject() (myDatomisca: DatomicAuthService)
-    extends DelegableAuthInfoDAO[OAuth2Info] {
+  extends DelegableAuthInfoDAO[OAuth2Info] {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -88,8 +88,7 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
     val params = Attribute(ns.oAuth2Info / "params", SchemaType.string, Cardinality.one).withDoc("Additional params transported in conjunction with the token")
 
     val schema = Seq(
-      accessToken, tokenType, expiresIn, refreshToken, params
-    )
+      accessToken, tokenType, expiresIn, refreshToken, params)
 
   }
 
@@ -102,16 +101,14 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
     Schema.tokenType.readOpt[String] and
     Schema.expiresIn.readOpt[Int] and
     Schema.refreshToken.readOpt[String] and
-    Schema.params.readOpt[String].map(stringToMap)
-  )(OAuth2Info.apply _)
+    Schema.params.readOpt[String].map(stringToMap))(OAuth2Info.apply _)
 
   implicit val writer: PartialAddEntityWriter[OAuth2Info] = (
     Schema.accessToken.write[String] and
     Schema.tokenType.writeOpt[String] and
     Schema.expiresIn.writeOpt[Int] and
     Schema.refreshToken.writeOpt[String] and
-    Schema.params.writeOpt[String].contramap(mapToString)
-  )(unlift(OAuth2Info.unapply))
+    Schema.params.writeOpt[String].contramap(mapToString))(unlift(OAuth2Info.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OAuth2Info)] = {
     val query = Query(
@@ -124,8 +121,7 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/oAuth2Info ?e]
     ]
-      """
-    )
+      """)
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
@@ -156,8 +152,7 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
       DB.factOrNone(o.tokenType, oAuth2Info.tokenType, Schema.tokenType -> oAuth2Info.tokenType.getOrElse("")),
       DB.factOrNone(o.expiresIn, oAuth2Info.expiresIn, Schema.expiresIn -> oAuth2Info.expiresIn.getOrElse(0)),
       DB.factOrNone(o.refreshToken, oAuth2Info.refreshToken, Schema.refreshToken -> oAuth2Info.refreshToken.getOrElse("")),
-      DB.factOrNone(o.params, oAuth2Info.params, Schema.params -> mapToString(oAuth2Info.params).getOrElse(""))
-    ).flatten
+      DB.factOrNone(o.params, oAuth2Info.params, Schema.params -> mapToString(oAuth2Info.params).getOrElse(""))).flatten
 
     for {
       tx <- Datomic.transact(passwordInfoFacts)

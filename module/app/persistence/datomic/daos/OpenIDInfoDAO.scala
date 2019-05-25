@@ -18,7 +18,7 @@ import scala.language.reflectiveCalls
  * The DAO to persist the OAuth1 information.
  */
 final class OpenIDInfoDAO @Inject() (myDatomisca: DatomicAuthService)
-    extends DelegableAuthInfoDAO[OpenIDInfo] {
+  extends DelegableAuthInfoDAO[OpenIDInfo] {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -85,8 +85,7 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
     val attributes = Attribute(ns.openIdInfo / "attributes", SchemaType.string, Cardinality.one).withDoc("The attributes passed by the provider")
 
     val schema = Seq(
-      id, attributes
-    )
+      id, attributes)
 
   }
 
@@ -96,13 +95,11 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
 
   implicit val reader: EntityReader[OpenIDInfo] = (
     Schema.id.read[String] and
-    Schema.attributes.read[String].map(stringToMap)
-  )(OpenIDInfo.apply _)
+    Schema.attributes.read[String].map(stringToMap))(OpenIDInfo.apply _)
 
   implicit val writer: PartialAddEntityWriter[OpenIDInfo] = (
     Schema.id.write[String] and
-    Schema.attributes.write[String].contramap(mapToString)
-  )(unlift(OpenIDInfo.unapply))
+    Schema.attributes.write[String].contramap(mapToString))(unlift(OpenIDInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OpenIDInfo)] = {
     val query = Query(
@@ -115,8 +112,7 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
           [?l :loginInfo/providerKey ?providerKey]
           [?l :loginInfo/openIdInfo ?e]
       ]
-      """
-    )
+      """)
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
@@ -144,8 +140,7 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
 
     val passwordInfoFacts: Seq[TxData] = Seq(
       DB.factOrNone(o.id, oAuth1Info.id, Schema.id -> oAuth1Info.id),
-      DB.factOrNone(o.attributes, oAuth1Info.attributes, Schema.attributes -> mapToString(oAuth1Info.attributes))
-    ).flatten
+      DB.factOrNone(o.attributes, oAuth1Info.attributes, Schema.attributes -> mapToString(oAuth1Info.attributes))).flatten
 
     for {
       tx <- Datomic.transact(passwordInfoFacts)

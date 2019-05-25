@@ -59,8 +59,7 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
     if (id startsWith "datomic:")
       id
     else
-      uri(id)
-  )
+      uri(id))
 
   /**
    * Safely creates a Datomic connection :
@@ -89,8 +88,7 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
                   |  config key:      $k
                   |  storage service: ${uri.getScheme}
                   |  db URI path:     ${uri.getAuthority}${uri.getPath}
-                  |}""".stripMargin
-            )
+                  |}""".stripMargin)
           }
       }
     }

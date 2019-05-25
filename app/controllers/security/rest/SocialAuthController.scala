@@ -1,13 +1,12 @@
 package controllers.security.rest
 
 import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.impl.providers._
 import models.UserService
-import play.api.cache.CacheApi
+import play.api.cache.SyncCacheApi
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
@@ -33,7 +32,7 @@ class SocialAuthController @Inject() (
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
   socialProviderRegistry: SocialProviderRegistry,
-  cache: CacheApi) extends Controller with I18nSupport with Logger {
+  cache: SyncCacheApi) extends Controller with I18nSupport with Logger {
 
   /**
    * Authenticates a user against a social provider.

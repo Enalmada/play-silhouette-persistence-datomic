@@ -20,7 +20,7 @@ import scala.language.reflectiveCalls
  * Note: Not thread safe, demo only.
  */
 final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService)
-    extends DelegableAuthInfoDAO[PasswordInfo] {
+  extends DelegableAuthInfoDAO[PasswordInfo] {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn
@@ -88,22 +88,19 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
     val salt = Attribute(ns.passwordInfo / "salt", SchemaType.string, Cardinality.one).withDoc("salt")
 
     val schema = Seq(
-      hasher, password, salt
-    )
+      hasher, password, salt)
 
   }
 
   implicit val reader: EntityReader[PasswordInfo] = (
     Schema.hasher.read[String] and
     Schema.password.read[String] and
-    Schema.salt.readOpt[String]
-  )(PasswordInfo.apply _)
+    Schema.salt.readOpt[String])(PasswordInfo.apply _)
 
   implicit val writer: PartialAddEntityWriter[PasswordInfo] = (
     Schema.hasher.write[String] and
     Schema.password.write[String] and
-    Schema.salt.writeOpt[String]
-  )(unlift(PasswordInfo.unapply))
+    Schema.salt.writeOpt[String])(unlift(PasswordInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, PasswordInfo)] = {
     val query = Query(
@@ -116,8 +113,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/passwordInfo ?e]
     ]
-      """
-    )
+      """)
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
@@ -146,8 +142,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
     val passwordInfoFacts: Seq[TxData] = Seq(
       DB.factOrNone(o.hasher, passwordInfo.hasher, Schema.hasher -> passwordInfo.hasher),
       DB.factOrNone(o.password, passwordInfo.password, Schema.password -> passwordInfo.password),
-      DB.factOrNone(o.salt, passwordInfo.salt, Schema.salt -> passwordInfo.salt.getOrElse(""))
-    ).flatten
+      DB.factOrNone(o.salt, passwordInfo.salt, Schema.salt -> passwordInfo.salt.getOrElse(""))).flatten
 
     for {
       tx <- Datomic.transact(passwordInfoFacts)

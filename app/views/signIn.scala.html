@@ -1,6 +1,5 @@
 @(signInForm: Form[forms.SignInForm.SignInData], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@import com.mohiva.play.silhouette.impl.providers.oauth2.ClefProvider
 @import b3.inline.fieldConstructor
 @import controllers.security.web._
 
@@ -38,11 +37,6 @@
                     <a href="@routes.SocialAuthController.authenticate(p.id)" class="provider @p.id" title="@messagesProvider.messages(p.id)"><img src="@controllers.routes.Assets.at(s"images/providers/${p.id}.png")" width="64px" height="64px" alt="@messagesProvider.messages(p.id)"></a>
                 }
                 </div>
-                @defining(socialProviders.get[ClefProvider]) { clef =>
-                    @if(clef.isDefined) {
-                        <script type="text/javascript" src="https://clef.io/v3/clef.js" class="clef-button" data-app-id="@clef.get.settings.clientID" data-color="blue" data-style="flat" data-redirect-url="@clef.get.settings.redirectURL" data-type="login"></script>
-                    }
-                }
             </div>
         }
 

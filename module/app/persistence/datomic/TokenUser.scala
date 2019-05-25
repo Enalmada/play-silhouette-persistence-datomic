@@ -30,8 +30,7 @@ object TokenUser extends DB[TokenUser] {
     val isSignUp = Attribute(ns.tokenUser / "isSignUp", SchemaType.boolean, Cardinality.one).withDoc("true when sign up")
 
     val schema = Seq(
-      id, email, expirationTime, isSignUp
-    )
+      id, email, expirationTime, isSignUp)
 
   }
 
@@ -42,15 +41,13 @@ object TokenUser extends DB[TokenUser] {
     Schema.id.read[UUID] and
     Schema.email.read[String] and
     Schema.expirationTime.read[Date].map(dateToLocalDateTime) and
-    Schema.isSignUp.read[Boolean]
-  )(TokenUser.apply _)
+    Schema.isSignUp.read[Boolean])(TokenUser.apply _)
 
   implicit val writer: PartialAddEntityWriter[TokenUser] = (
     Schema.id.write[UUID] and
     Schema.email.write[String] and
     Schema.expirationTime.write[Date].contramap(localDateTimeToDate) and
-    Schema.isSignUp.write[Boolean]
-  )(unlift(TokenUser.unapply))
+    Schema.isSignUp.write[Boolean])(unlift(TokenUser.unapply))
 
   private val hoursTillExpiry = 24L
 
