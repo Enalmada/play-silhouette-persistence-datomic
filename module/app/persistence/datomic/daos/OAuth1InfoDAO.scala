@@ -1,23 +1,21 @@
 package persistence.datomic.daos
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.providers.OAuth1Info
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
+import javax.inject.Inject
 import persistence.datomic.DatomicAuthService
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 
 /**
  * The DAO to persist the OAuth1 information.
  */
-final class OAuth1InfoDAO @Inject() (myDatomisca: DatomicAuthService)
+final class OAuth1InfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OAuth1Info] {
 
   implicit val conn = myDatomisca.conn
@@ -69,7 +67,7 @@ final class OAuth1InfoDAO @Inject() (myDatomisca: DatomicAuthService)
     }
   }
 
-  def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn))
+  def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn, ec))
 
 }
 
@@ -114,7 +112,7 @@ object OAuth1InfoImpl extends DB[OAuth1Info] {
 
   }
 
-  def add(loginInfo: LoginInfo, oAuth1Info: OAuth1Info)(implicit conn: Connection): Future[OAuth1Info] = {
+  def add(loginInfo: LoginInfo, oAuth1Info: OAuth1Info)(implicit conn: Connection, ec: ExecutionContext): Future[OAuth1Info] = {
     implicit val loginInfoWriter = persistence.datomic.daos.LoginInfoImpl.writer
     val oAuth1InfoFact = DatomicMapping.toEntity(DId(Partition.USER))(oAuth1Info)
 
@@ -128,7 +126,7 @@ object OAuth1InfoImpl extends DB[OAuth1Info] {
 
   }
 
-  def update(loginInfo: LoginInfo, oAuth1Info: OAuth1Info)(implicit conn: Connection): Future[OAuth1Info] = {
+  def update(loginInfo: LoginInfo, oAuth1Info: OAuth1Info)(implicit conn: Connection, ec: ExecutionContext): Future[OAuth1Info] = {
 
     val foundInfo: (Long, OAuth1Info) = OAuth1InfoImpl.findWithId(loginInfo).get
     implicit val primaryId = foundInfo._1

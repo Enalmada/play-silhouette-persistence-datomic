@@ -1,9 +1,7 @@
 package controllers.security.web
 
 import java.util.UUID
-import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
@@ -11,6 +9,7 @@ import com.mohiva.play.silhouette.api.util.{ Credentials, PasswordHasher, Passwo
 import com.mohiva.play.silhouette.api.{ Silhouette, _ }
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import controllers.security.web.PasswordChangeController.ChangeInfo
+import javax.inject.Inject
 import models.UserService
 import persistence.datomic.TokenUser
 import persistence.datomic.services.TokenService

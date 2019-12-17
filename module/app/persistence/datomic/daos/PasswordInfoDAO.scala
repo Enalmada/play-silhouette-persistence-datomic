@@ -1,17 +1,15 @@
 package persistence.datomic.daos
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
+import javax.inject.Inject
 import persistence.datomic.DatomicAuthService
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 
 /**
@@ -19,7 +17,7 @@ import scala.language.reflectiveCalls
  *
  * Note: Not thread safe, demo only.
  */
-final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService)
+final class PasswordInfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[PasswordInfo] {
 
   implicit val conn = myDatomisca.conn
@@ -71,7 +69,7 @@ final class PasswordInfoDAO @Inject() (myDatomisca: DatomicAuthService)
     }
   }
 
-  override def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn))
+  override def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn, ec))
 
 }
 
@@ -119,7 +117,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
 
   }
 
-  def add(loginInfo: LoginInfo, passwordInfo: PasswordInfo)(implicit conn: Connection): Future[PasswordInfo] = {
+  def add(loginInfo: LoginInfo, passwordInfo: PasswordInfo)(implicit conn: Connection, ec: ExecutionContext): Future[PasswordInfo] = {
     implicit val loginInfoWriter = persistence.datomic.daos.LoginInfoImpl.writer
     val passwordInfoFact = DatomicMapping.toEntity(DId(Partition.USER))(passwordInfo)
 
@@ -133,7 +131,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
 
   }
 
-  def update(loginInfo: LoginInfo, passwordInfo: PasswordInfo)(implicit conn: Connection): Future[PasswordInfo] = {
+  def update(loginInfo: LoginInfo, passwordInfo: PasswordInfo)(implicit conn: Connection, ec: ExecutionContext): Future[PasswordInfo] = {
 
     val foundInfo: (Long, PasswordInfo) = PasswordInfoImpl.findWithId(loginInfo).get
     implicit val primaryId = foundInfo._1

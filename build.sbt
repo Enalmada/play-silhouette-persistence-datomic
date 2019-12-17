@@ -1,5 +1,4 @@
 import com.typesafe.sbt.SbtScalariform._
-
 import scalariform.formatter.preferences._
 
 name := "play-silhouette-seed"
@@ -30,7 +29,7 @@ libraryDependencies ++= Seq(
   "com.datomic" % "datomic-free" % "0.9.5544",
   "com.github.enalmada" %% "datomisca-dao" % "0.1.13",
   //"org.webjars" %% "webjars-play" % "2.6.0-M1",
-  "net.codingwell" %% "scala-guice" % "4.2.6",
+  "net.codingwell" %% "scala-guice" % "4.2.3",
   "com.iheart" %% "ficus" % "1.4.7",
   "com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B3-SNAPSHOT",
   "com.typesafe.play" %% "play-mailer" % "7.0.0",

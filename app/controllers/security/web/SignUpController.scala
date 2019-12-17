@@ -1,13 +1,12 @@
 package controllers.security.web
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.services.AvatarService
 import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.providers._
 import forms.SignUpForm
+import javax.inject.Inject
 import models.{ Role, User, UserService }
 import play.api.i18n.{ I18nSupport, Messages }
 import play.api.libs.concurrent.Execution.Implicits._

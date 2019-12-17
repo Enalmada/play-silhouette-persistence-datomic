@@ -5,7 +5,7 @@ import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import scala.language.reflectiveCalls
 
 object LoginInfoImpl extends DB[LoginInfo] {
@@ -54,8 +54,8 @@ object LoginInfoImpl extends DB[LoginInfo] {
 
   }
 
-  def remove(loginInfo: LoginInfo)(implicit conn: Connection): Unit = find(loginInfo).map(remove)
+  def remove(loginInfo: LoginInfo)(implicit conn: Connection, ec: ExecutionContext): Unit = find(loginInfo).map(remove)
 
-  def remove(id: Long)(implicit conn: Connection): Unit = LoginInfoImpl.retractEntity(id)
+  def remove(id: Long)(implicit conn: Connection, ec: ExecutionContext): Unit = LoginInfoImpl.retractEntity(id)
 
 }

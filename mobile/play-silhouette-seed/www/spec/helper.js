@@ -16,17 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-afterEach(function() {
+afterEach(function () {
     document.getElementById('stage').innerHTML = '';
 });
 
 var helper = {
-    trigger: function(obj, name) {
+    trigger: function (obj, name) {
         var e = document.createEvent('Event');
         e.initEvent(name, true, true);
         obj.dispatchEvent(e);
     },
-    getComputedStyle: function(querySelector, property) {
+    getComputedStyle: function (querySelector, property) {
         var element = document.querySelector(querySelector);
         return window.getComputedStyle(element).getPropertyValue(property);
     }

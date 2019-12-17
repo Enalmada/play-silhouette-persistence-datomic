@@ -1,15 +1,13 @@
 package utils.persistence
 
-import javax.inject._
-
 import datomisca.{ Connection, Datomic }
 import datomiscadao.DB
+import javax.inject._
 import models.User
-import play.api.Logger
 import play.api.inject.ApplicationLifecycle
+import play.api.{ Logger, Logging }
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 object DatomicService {
   implicit var connOpt: Option[Connection] = None
@@ -18,7 +16,7 @@ object DatomicService {
 }
 
 @Singleton
-class DatomicService @Inject() (env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle) {
+class DatomicService @Inject() (implicit env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle, ec: ExecutionContext) extends Logging {
 
   Logger.debug("My Datomisca initialized.")
 

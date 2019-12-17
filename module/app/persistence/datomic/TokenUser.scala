@@ -8,8 +8,7 @@ import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 case class TokenUser(id: UUID = UUID.randomUUID(), email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L * 14), isSignUp: Boolean = false) extends Token {
   def isExpired: Boolean = expirationTime.isBefore(LocalDateTime.now())
@@ -65,7 +64,7 @@ object TokenUser extends DB[TokenUser] {
     list(Datomic.q(query, Datomic.database, email))
   }
 
-  def save(tokenUser: TokenUser)(implicit conn: datomisca.Connection): Future[TokenUser] = {
+  def save(tokenUser: TokenUser)(implicit conn: datomisca.Connection, ec: ExecutionContext): Future[TokenUser] = {
 
     val tokenUserFact = DatomicMapping.toEntity(DId(Partition.USER))(tokenUser)
 
@@ -75,7 +74,7 @@ object TokenUser extends DB[TokenUser] {
 
   }
 
-  def delete(id: UUID)(implicit datomicService: DatomicAuthService): Unit = {
+  def delete(id: UUID)(implicit datomicService: DatomicAuthService, ec: ExecutionContext): Unit = {
     implicit val conn = datomicService.conn
     TokenUser.retractEntity(LookupRef(TokenUser.Schema.id, id))
     // Note that excision has no effect on in memory test db

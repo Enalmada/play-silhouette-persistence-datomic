@@ -1,8 +1,7 @@
 package utils
 
-import javax.inject.Inject
-
 import akka.actor.ActorSystem
+import javax.inject.Inject
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.mailer._
 

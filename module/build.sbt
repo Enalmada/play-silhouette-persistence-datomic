@@ -1,6 +1,6 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.10"
+version := "0.1.11"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
@@ -90,4 +90,4 @@ pomExtra in Global := {
 credentials += Credentials(Path.userHome / ".sbt" / "sonatype.credentials")
 
 // https://github.com/xerial/sbt-sonatype/issues/30
-sources in (Compile, doc) := Seq()
+sources in(Compile, doc) := Seq()

@@ -1,7 +1,5 @@
 package controllers.security.web
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.Authenticator.Implicits._
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -10,6 +8,7 @@ import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
 import forms.SignInForm
+import javax.inject.Inject
 import models.UserService
 import net.ceedubs.ficus.Ficus._
 import play.api.Configuration

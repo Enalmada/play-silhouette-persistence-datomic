@@ -1,11 +1,10 @@
 package controllers
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
+import javax.inject.Inject
 import models.{ Role, WithRole }
-import play.api.i18n.{ I18nSupport, MessagesApi }
-import play.api.mvc.{ AbstractController, Controller, ControllerComponents }
+import play.api.i18n.I18nSupport
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.DefaultEnv
 import utils.persistence.DatomicService
 
@@ -14,9 +13,9 @@ import scala.concurrent.Future
 /**
  * The basic application controller.
  *
- * @param messagesApi            The Play messages API.
- * @param silhouette             The Silhouette stack.
- * @param webJarAssets           The webjar assets implementation.
+ * @param messagesApi  The Play messages API.
+ * @param silhouette   The Silhouette stack.
+ * @param webJarAssets The webjar assets implementation.
  */
 class ApplicationController @Inject() (implicit
   components: ControllerComponents,

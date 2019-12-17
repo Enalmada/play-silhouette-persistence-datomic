@@ -1,23 +1,21 @@
 package persistence.datomic.daos
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
+import javax.inject.Inject
 import persistence.datomic.DatomicAuthService
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 
 /**
  * The DAO to persist the OAuth2 information.
  */
-final class OAuth2InfoDAO @Inject() (myDatomisca: DatomicAuthService)
+final class OAuth2InfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OAuth2Info] {
 
   implicit val conn = myDatomisca.conn
@@ -69,7 +67,7 @@ final class OAuth2InfoDAO @Inject() (myDatomisca: DatomicAuthService)
     }
   }
 
-  override def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn))
+  override def remove(loginInfo: LoginInfo): Future[Unit] = Future.successful(LoginInfoImpl.remove(loginInfo)(conn, ec))
 
 }
 
@@ -127,7 +125,7 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
 
   }
 
-  def add(loginInfo: LoginInfo, oAuth2Info: OAuth2Info)(implicit conn: Connection): Future[OAuth2Info] = {
+  def add(loginInfo: LoginInfo, oAuth2Info: OAuth2Info)(implicit conn: Connection, ec: ExecutionContext): Future[OAuth2Info] = {
     implicit val loginInfoWriter = persistence.datomic.daos.LoginInfoImpl.writer
     val oAuth2InfoFact = DatomicMapping.toEntity(DId(Partition.USER))(oAuth2Info)
 
@@ -141,7 +139,7 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
 
   }
 
-  def update(loginInfo: LoginInfo, oAuth2Info: OAuth2Info)(implicit conn: Connection): Future[OAuth2Info] = {
+  def update(loginInfo: LoginInfo, oAuth2Info: OAuth2Info)(implicit conn: Connection, ec: ExecutionContext): Future[OAuth2Info] = {
 
     val foundInfo: (Long, OAuth2Info) = OAuth2InfoImpl.findWithId(loginInfo).get
     implicit val primaryId = foundInfo._1

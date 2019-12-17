@@ -4,7 +4,7 @@ import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 case class PersistenceDBVersion(
   id: Long = -1,
@@ -32,7 +32,7 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
     ID.write[Long] and
     Schema.version.write[Int])(unlift(PersistenceDBVersion.unapply))
 
-  def create(dbVersion: PersistenceDBVersion)(implicit conn: Connection): Long = {
+  def create(dbVersion: PersistenceDBVersion)(implicit conn: Connection, ec: ExecutionContext): Long = {
 
     val newVersion = DatomicMapping.toEntity(DId(Partition.USER))(dbVersion)
 
@@ -40,7 +40,7 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
   }
 
-  def update(id: Long, dbVersion: PersistenceDBVersion)(implicit conn: Connection): Unit = {
+  def update(id: Long, dbVersion: PersistenceDBVersion)(implicit conn: Connection, ec: ExecutionContext): Unit = {
     implicit val primaryId = id
     val o = PersistenceDBVersion.get(id)
 
@@ -60,7 +60,7 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
     ]
     """)
 
-  def getDbVersion()(implicit conn: Connection): PersistenceDBVersion = {
+  def getDbVersion()(implicit conn: Connection, ec: ExecutionContext): PersistenceDBVersion = {
 
     PersistenceDBVersion.headOption(Datomic.q(queryAll, Datomic.database)) match {
       case Some(dbVersion) => dbVersion
@@ -72,11 +72,11 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
   }
 
-  def updateVersion(dbVersion: PersistenceDBVersion)(implicit conn: Connection) = {
+  def updateVersion(dbVersion: PersistenceDBVersion)(implicit conn: Connection, ec: ExecutionContext) = {
     val copy = dbVersion.copy(version = dbVersion.version + 1)
     PersistenceDBVersion.update(dbVersion.id, copy)
   }
 
-  def delete(id: Long)(implicit conn: Connection) = PersistenceDBVersion.retractEntity(id)
+  def delete(id: Long)(implicit conn: Connection, ec: ExecutionContext) = PersistenceDBVersion.retractEntity(id)
 
 }

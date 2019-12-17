@@ -1,7 +1,7 @@
 package controllers
 
 import com.google.inject.AbstractModule
-import com.mohiva.play.silhouette.api.{ Environment, LoginInfo }
+import com.mohiva.play.silhouette.api.{Environment, LoginInfo}
 import com.mohiva.play.silhouette.test._
 import models.User
 import net.codingwell.scalaguice.ScalaModule
@@ -9,7 +9,7 @@ import org.specs2.mock.Mockito
 import org.specs2.specification.Scope
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.test.{ FakeRequest, PlaySpecification, WithApplication }
+import play.api.test.{FakeRequest, PlaySpecification, WithApplication}
 import utils.auth.DefaultEnv
 
 /**

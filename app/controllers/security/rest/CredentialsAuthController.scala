@@ -1,7 +1,5 @@
 package controllers.security.rest
 
-import javax.inject.Inject
-
 import com.mohiva.play.silhouette.api.Authenticator.Implicits._
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
@@ -10,6 +8,7 @@ import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
 import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
 import com.mohiva.play.silhouette.impl.providers._
 import forms.SignInForm
+import javax.inject.Inject
 import models.UserService
 import net.ceedubs.ficus.Ficus._
 import play.api.Configuration
@@ -19,8 +18,7 @@ import play.api.libs.json._
 import play.api.mvc.{ Action, Controller }
 import utils.auth.JwtEnv
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
 
 /**
@@ -36,6 +34,7 @@ import scala.concurrent.duration._
  * @param clock                  The clock instance.
  */
 class CredentialsAuthController @Inject() (
+  implicit
   val messagesApi: MessagesApi,
   silhouette: Silhouette[JwtEnv],
   userService: UserService,
@@ -43,6 +42,7 @@ class CredentialsAuthController @Inject() (
   credentialsProvider: CredentialsProvider,
   socialProviderRegistry: SocialProviderRegistry,
   configuration: Configuration,
+  ec: ExecutionContext,
   clock: Clock)
   extends Controller with I18nSupport {
 

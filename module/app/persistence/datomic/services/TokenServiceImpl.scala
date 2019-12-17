@@ -1,14 +1,13 @@
 package persistence.datomic.services
 
 import java.util.UUID
+
 import javax.inject.Inject
-
 import persistence.datomic.{ DatomicAuthService, TokenUser }
-import play.api.libs.concurrent.Execution.Implicits._
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
-class TokenServiceImpl @Inject() (datomicService: DatomicAuthService) extends TokenService[TokenUser] {
+class TokenServiceImpl @Inject() (implicit datomicService: DatomicAuthService, ec: ExecutionContext) extends TokenService[TokenUser] {
 
   implicit val conn = datomicService.conn
   protected[this] val e = conn
@@ -22,6 +21,6 @@ class TokenServiceImpl @Inject() (datomicService: DatomicAuthService) extends To
   }
 
   def consume(id: UUID): Unit = {
-    TokenUser.delete(id)(datomicService)
+    TokenUser.delete(id)(datomicService, ec)
   }
 }

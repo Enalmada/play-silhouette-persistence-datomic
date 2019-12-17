@@ -40,11 +40,11 @@
                     @user.map { u =>
                     <li><a href="@routes.ApplicationController.index">@u.fullName</a></li>
                     <li><a href="@controllers.security.web.routes.PasswordChangeController.startChangePassword">@messagesProvider.messages("specify.password.button")</a></li>
-                            <li><a href="@routes.ApplicationController.signOut">@messagesProvider.messages("sign.out")</a></li>
-                        }.getOrElse {
-                            <li><a href="@controllers.security.web.routes.SignInController.view">@messagesProvider.messages("sign.in")</a></li>
-                            <li><a href="@controllers.security.web.routes.SignUpController.view">@messagesProvider.messages("sign.up")</a></li>
-                        }
+                    <li><a href="@routes.ApplicationController.signOut">@messagesProvider.messages("sign.out")</a></li>
+                    }.getOrElse {
+                        <li><a href="@controllers.security.web.routes.SignInController.view">@messagesProvider.messages("sign.in")</a></li>
+                        <li><a href="@controllers.security.web.routes.SignUpController.view">@messagesProvider.messages("sign.up")</a></li>
+                    }
                     </ul>
                 </nav>
             </div>

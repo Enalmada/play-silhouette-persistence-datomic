@@ -1,6 +1,5 @@
-import javax.inject.Inject
-
 import akka.stream.Materializer
+import javax.inject.Inject
 import play.api.Mode
 import play.api.http.HttpFilters
 import play.api.mvc.{ Filter, RequestHeader, Result, Results }

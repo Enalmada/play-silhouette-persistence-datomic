@@ -85,11 +85,11 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
             val uri = new java.net.URI(uriStr drop 8)
             Logger.info(
               s"""DatomiscaPlayPlugin found datomisca.uri config with,
-                  |{
-                  |  config key:      $k
-                  |  storage service: ${uri.getScheme}
-                  |  db URI path:     ${uri.getAuthority}${uri.getPath}
-                  |}""".stripMargin
+                 |{
+                 |  config key:      $k
+                 |  storage service: ${uri.getScheme}
+                 |  db URI path:     ${uri.getAuthority}${uri.getPath}
+                 |}""".stripMargin
             )
           }
       }

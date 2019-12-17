@@ -6,8 +6,7 @@ import datomisca._
 import datomiscadao.DB
 import persistence.datomic.daos.LoginInfoImpl
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 
 /**
@@ -127,7 +126,7 @@ object User extends DB[User] {
 
   }
 
-  def create(user: User, loginInfo: LoginInfo)(implicit conn: Connection): Future[User] = {
+  def create(user: User, loginInfo: LoginInfo)(implicit conn: Connection, ec: ExecutionContext): Future[User] = {
     implicit val loginInfoWriter = LoginInfoImpl.writer
 
     val loginInfoFact = DatomicMapping.toEntity(DId(Partition.USER))(loginInfo)
@@ -142,7 +141,7 @@ object User extends DB[User] {
 
   }
 
-  def update(id: Long, user: User)(implicit conn: Connection): Future[User] = {
+  def update(id: Long, user: User)(implicit conn: Connection, ec: ExecutionContext): Future[User] = {
     implicit val primaryId = id
     val o = User.get(id)
 
