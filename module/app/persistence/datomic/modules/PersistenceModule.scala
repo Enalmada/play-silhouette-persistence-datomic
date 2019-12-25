@@ -1,9 +1,9 @@
 package persistence.datomic.modules
 
-import com.google.inject.{ AbstractModule, Provides }
+import com.google.inject.{AbstractModule, Provides}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordInfo
-import com.mohiva.play.silhouette.impl.providers.{ OAuth1Info, OAuth2Info, OpenIDInfo }
+import com.mohiva.play.silhouette.impl.providers.{OAuth1Info, OAuth2Info, OpenIDInfo}
 import com.mohiva.play.silhouette.persistence.daos._
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import javax.inject
@@ -38,10 +38,10 @@ class PersistenceModule extends AbstractModule with ScalaModule {
    */
   @Provides
   def provideAuthInfoRepository(
-    passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo],
-    oauth1InfoDAO: DelegableAuthInfoDAO[OAuth1Info],
-    oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info],
-    openIDInfoDAO: DelegableAuthInfoDAO[OpenIDInfo])(implicit ec: ExecutionContext): AuthInfoRepository = {
+                                 passwordInfoDAO: DelegableAuthInfoDAO[PasswordInfo],
+                                 oauth1InfoDAO: DelegableAuthInfoDAO[OAuth1Info],
+                                 oauth2InfoDAO: DelegableAuthInfoDAO[OAuth2Info],
+                                 openIDInfoDAO: DelegableAuthInfoDAO[OpenIDInfo])(implicit ec: ExecutionContext): AuthInfoRepository = {
 
     new DelegableAuthInfoRepository(passwordInfoDAO, oauth1InfoDAO, oauth2InfoDAO, openIDInfoDAO)
   }

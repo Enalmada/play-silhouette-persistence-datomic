@@ -1,13 +1,12 @@
 package persistence.datomic
 
-import datomisca.{ Connection, Datomic }
-import datomiscadao.DB
+import datomisca.{Connection, Datomic}
 import javax.inject._
 import persistence.datomic.daos._
-import play.api.{ Logger, Logging }
+import play.api.Logging
 import play.api.inject.ApplicationLifecycle
-
-import scala.concurrent.{ ExecutionContext, Future }
+import datomiscadao.DB
+import scala.concurrent.{ExecutionContext, Future}
 
 object DatomicAuthService {
   implicit var connOpt: Option[Connection] = None
@@ -16,9 +15,9 @@ object DatomicAuthService {
 }
 
 @Singleton
-class DatomicAuthService @Inject() (implicit env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle, ec: ExecutionContext) extends Logging {
+class DatomicAuthService @Inject()(implicit env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle, ec: ExecutionContext) extends Logging {
 
-  Logger.debug("DatomicAuthService initialized.")
+  logger.debug("DatomicAuthService initialized.")
 
   var datomiscaPlayPlugin = new DatomiscaPlayPlugin(config)
 
@@ -47,7 +46,7 @@ class DatomicAuthService @Inject() (implicit env: play.Environment, config: play
   }
 
   def testShutdown() = {
-    Logger.debug("My Datomisca shutdown.")
+    logger.debug("My Datomisca shutdown.")
     Datomic.deleteDatabase(connectionUrl("test"))
     Datomic.createDatabase(connectionUrl("test"))
     Datomic.connect(connectionUrl("test"))
@@ -85,7 +84,7 @@ class DatomicAuthService @Inject() (implicit env: play.Environment, config: play
 
   def postMigrations() = {
     val dbVersion = PersistenceDBVersion.getDbVersion
-    Logger.info(s"PersistenceDBVersion: ${dbVersion.version}")
+    logger.info(s"PersistenceDBVersion: ${dbVersion.version}")
   }
 
 }

@@ -37,6 +37,8 @@ val appDependencies = Seq(
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
+* **0.1.12** [release on 2019-12-16]
+    * Play 2.8.0 and scala 2.12.10    
 * **0.1.11** [release on 2019-12-16]
     * Play 2.7.3 (scala-guice 4.2.3)    
 * **0.1.10** [release on 2019-12-08]

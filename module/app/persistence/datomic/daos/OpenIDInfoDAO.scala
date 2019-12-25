@@ -9,13 +9,13 @@ import datomiscadao.DB
 import javax.inject.Inject
 import persistence.datomic.DatomicAuthService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.reflectiveCalls
 
 /**
  * The DAO to persist the OAuth1 information.
  */
-final class OpenIDInfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
+final class OpenIDInfoDAO @Inject()(implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OpenIDInfo] {
 
   implicit val conn = myDatomisca.conn
@@ -93,11 +93,11 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
 
   implicit val reader: EntityReader[OpenIDInfo] = (
     Schema.id.read[String] and
-    Schema.attributes.read[String].map(stringToMap))(OpenIDInfo.apply _)
+      Schema.attributes.read[String].map(stringToMap)) (OpenIDInfo.apply _)
 
   implicit val writer: PartialAddEntityWriter[OpenIDInfo] = (
     Schema.id.write[String] and
-    Schema.attributes.write[String].contramap(mapToString))(unlift(OpenIDInfo.unapply))
+      Schema.attributes.write[String].contramap(mapToString)) (unlift(OpenIDInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OpenIDInfo)] = {
     val query = Query(

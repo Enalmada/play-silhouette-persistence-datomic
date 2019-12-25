@@ -9,7 +9,7 @@ import datomiscadao.DB
 import javax.inject.Inject
 import persistence.datomic.DatomicAuthService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.reflectiveCalls
 
 /**
@@ -17,7 +17,7 @@ import scala.language.reflectiveCalls
  *
  * Note: Not thread safe, demo only.
  */
-final class PasswordInfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
+final class PasswordInfoDAO @Inject()(implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[PasswordInfo] {
 
   implicit val conn = myDatomisca.conn
@@ -92,13 +92,13 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
 
   implicit val reader: EntityReader[PasswordInfo] = (
     Schema.hasher.read[String] and
-    Schema.password.read[String] and
-    Schema.salt.readOpt[String])(PasswordInfo.apply _)
+      Schema.password.read[String] and
+      Schema.salt.readOpt[String]) (PasswordInfo.apply _)
 
   implicit val writer: PartialAddEntityWriter[PasswordInfo] = (
     Schema.hasher.write[String] and
-    Schema.password.write[String] and
-    Schema.salt.writeOpt[String])(unlift(PasswordInfo.unapply))
+      Schema.password.write[String] and
+      Schema.salt.writeOpt[String]) (unlift(PasswordInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, PasswordInfo)] = {
     val query = Query(
