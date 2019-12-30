@@ -18,7 +18,9 @@ class TLSFilter @Inject() (implicit val mat: Materializer, ec: ExecutionContext,
   def apply(nextFilter: RequestHeader => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
 
     if (!requestHeader.secure && env.mode != Mode.Test)
-      Future.successful(Results.MovedPermanently("https://" + requestHeader.host.replace(config.getString("http.port").getOrElse("9000"), config.getString("https.port").getOrElse("9443")) + requestHeader.uri))
+      Future.successful(Results.MovedPermanently("https://" + requestHeader.host.replace(
+        config.getOptional[String]("http.port").getOrElse("9000"),
+        config.getOptional[String]("https.port").getOrElse("9443")) + requestHeader.uri))
     else
       nextFilter(requestHeader).map(_.withHeaders("Strict-Transport-Security" -> "max-age=31536000; includeSubDomains; preload"))
   }

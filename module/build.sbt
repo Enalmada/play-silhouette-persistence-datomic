@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-testkit" % "6.1.1" % "test",
   "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
   "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.16" % "provided",
+  "com.github.enalmada" %% "datomisca-dao" % "0.1.17" % "provided",
   "net.codingwell" %% "scala-guice" % "4.2.3" % "provided",
   "com.iheart" %% "ficus" % "1.4.7" % "provided",
   ws,

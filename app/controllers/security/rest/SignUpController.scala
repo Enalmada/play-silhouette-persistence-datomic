@@ -9,13 +9,12 @@ import forms.SignUpForm
 import javax.inject.Inject
 import models.{ User, UserService }
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{ Action, Controller }
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.JwtEnv
 import utils.persistence.DatomicService
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
  * The sign up controller.
@@ -28,14 +27,17 @@ import scala.concurrent.Future
  * @param passwordHasher     The password hasher implementation.
  */
 class SignUpController @Inject() (
-  val messagesApi: MessagesApi,
+  implicit
+  val components: ControllerComponents,
+  ec: ExecutionContext,
+  messagesApi: MessagesApi,
   silhouette: Silhouette[JwtEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
   avatarService: AvatarService,
   passwordHasher: PasswordHasher,
   myDatomisca: DatomicService)
-  extends Controller with I18nSupport {
+  extends AbstractController(components) with I18nSupport with Logger {
 
   implicit val conn = myDatomisca.conn
   protected[this] val e = conn

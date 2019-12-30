@@ -11,11 +11,10 @@ import javax.inject.Inject
 import models.UserService
 import play.api.Configuration
 import play.api.i18n.{ I18nSupport, Messages }
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.DefaultEnv
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration.{ Duration, FiniteDuration }
 
 /**
@@ -27,6 +26,8 @@ import scala.concurrent.duration.{ Duration, FiniteDuration }
  * @param socialProviderRegistry The social provider registry.
  */
 class SocialAuthController @Inject() (
+  implicit
+  ec: ExecutionContext,
   components: ControllerComponents,
   silhouette: Silhouette[DefaultEnv],
   userService: UserService,

@@ -9,13 +9,13 @@ import datomiscadao.DB
 import javax.inject.Inject
 import persistence.datomic.DatomicAuthService
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 
 /**
  * The DAO to persist the OAuth2 information.
  */
-final class OAuth2InfoDAO @Inject()(implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
+final class OAuth2InfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OAuth2Info] {
 
   implicit val conn = myDatomisca.conn
@@ -96,17 +96,17 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
 
   implicit val reader: EntityReader[OAuth2Info] = (
     Schema.accessToken.read[String] and
-      Schema.tokenType.readOpt[String] and
-      Schema.expiresIn.readOpt[Int] and
-      Schema.refreshToken.readOpt[String] and
-      Schema.params.readOpt[String].map(stringToMap)) (OAuth2Info.apply _)
+    Schema.tokenType.readOpt[String] and
+    Schema.expiresIn.readOpt[Int] and
+    Schema.refreshToken.readOpt[String] and
+    Schema.params.readOpt[String].map(stringToMap))(OAuth2Info.apply _)
 
   implicit val writer: PartialAddEntityWriter[OAuth2Info] = (
     Schema.accessToken.write[String] and
-      Schema.tokenType.writeOpt[String] and
-      Schema.expiresIn.writeOpt[Int] and
-      Schema.refreshToken.writeOpt[String] and
-      Schema.params.writeOpt[String].contramap(mapToString)) (unlift(OAuth2Info.unapply))
+    Schema.tokenType.writeOpt[String] and
+    Schema.expiresIn.writeOpt[Int] and
+    Schema.refreshToken.writeOpt[String] and
+    Schema.params.writeOpt[String].contramap(mapToString))(unlift(OAuth2Info.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OAuth2Info)] = {
     val query = Query(

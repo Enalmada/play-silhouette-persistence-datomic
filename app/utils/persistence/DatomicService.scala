@@ -4,8 +4,8 @@ import datomisca.{ Connection, Datomic }
 import datomiscadao.DB
 import javax.inject._
 import models.User
+import play.api.Logging
 import play.api.inject.ApplicationLifecycle
-import play.api.{ Logger, Logging }
 
 import scala.concurrent.{ ExecutionContext, Future }
 
@@ -18,7 +18,7 @@ object DatomicService {
 @Singleton
 class DatomicService @Inject() (implicit env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle, ec: ExecutionContext) extends Logging {
 
-  Logger.debug("My Datomisca initialized.")
+  logger.debug("My Datomisca initialized.")
 
   var datomiscaPlayPlugin = new DatomiscaPlayPlugin(config)
 
@@ -47,7 +47,7 @@ class DatomicService @Inject() (implicit env: play.Environment, config: play.api
   }
 
   def testShutdown() = {
-    Logger.debug("My Datomisca shutdown.")
+    logger.debug("My Datomisca shutdown.")
     Datomic.deleteDatabase(connectionUrl("test"))
     Datomic.createDatabase(connectionUrl("test"))
     Datomic.connect(connectionUrl("test"))

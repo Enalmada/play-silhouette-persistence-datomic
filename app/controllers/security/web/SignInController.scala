@@ -13,11 +13,10 @@ import models.UserService
 import net.ceedubs.ficus.Ficus._
 import play.api.Configuration
 import play.api.i18n.{ I18nSupport, Messages }
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.DefaultEnv
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -35,7 +34,9 @@ import scala.language.postfixOps
  * @param webJarAssets           The webjar assets implementation.
  */
 class SignInController @Inject() (
+  implicit
   val components: ControllerComponents,
+  ec: ExecutionContext,
   silhouette: Silhouette[DefaultEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,

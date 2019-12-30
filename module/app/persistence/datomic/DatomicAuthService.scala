@@ -1,12 +1,12 @@
 package persistence.datomic
 
-import datomisca.{Connection, Datomic}
+import datomisca.{ Connection, Datomic }
 import javax.inject._
 import persistence.datomic.daos._
 import play.api.Logging
 import play.api.inject.ApplicationLifecycle
 import datomiscadao.DB
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 object DatomicAuthService {
   implicit var connOpt: Option[Connection] = None
@@ -15,7 +15,7 @@ object DatomicAuthService {
 }
 
 @Singleton
-class DatomicAuthService @Inject()(implicit env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle, ec: ExecutionContext) extends Logging {
+class DatomicAuthService @Inject() (implicit env: play.Environment, config: play.api.Configuration, lifecycle: ApplicationLifecycle, ec: ExecutionContext) extends Logging {
 
   logger.debug("DatomicAuthService initialized.")
 

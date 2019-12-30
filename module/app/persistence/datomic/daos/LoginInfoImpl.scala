@@ -31,11 +31,11 @@ object LoginInfoImpl extends DB[LoginInfo] {
 
   implicit val reader: EntityReader[LoginInfo] = (
     Schema.providerId.read[String] and
-      Schema.providerKey.read[String]) (LoginInfo.apply _)
+    Schema.providerKey.read[String])(LoginInfo.apply _)
 
   implicit val writer: PartialAddEntityWriter[LoginInfo] = (
     Schema.providerId.write[String] and
-      Schema.providerKey.write[String]) (unlift(LoginInfo.unapply))
+    Schema.providerKey.write[String])(unlift(LoginInfo.unapply))
 
   def find(loginInfo: LoginInfo)(implicit conn: Connection): Option[Long] = {
     val query = Query(

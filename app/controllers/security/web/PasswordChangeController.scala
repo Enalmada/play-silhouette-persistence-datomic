@@ -13,17 +13,16 @@ import javax.inject.Inject
 import models.UserService
 import persistence.datomic.TokenUser
 import persistence.datomic.services.TokenService
-import play.api.Logger
+import play.api.Logging
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import play.api.i18n._
-import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import utils.auth.DefaultEnv
 import utils.{ MailService, Mailer }
 
-import scala.concurrent.Future
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.postfixOps
 import scala.reflect.ClassTag
 import scala.util.{ Failure, Success }
@@ -32,6 +31,7 @@ import scala.util.{ Failure, Success }
  * A controller to provide password change functionality
  */
 class PasswordChangeController @Inject() (implicit
+  ec: ExecutionContext,
   components: ControllerComponents,
   silhouette: Silhouette[DefaultEnv],
   userService: UserService,
@@ -41,7 +41,7 @@ class PasswordChangeController @Inject() (implicit
   passwordHasher: PasswordHasher,
   tokenService: TokenService[TokenUser],
   mailService: MailService)
-  extends AbstractController(components) with I18nSupport {
+  extends AbstractController(components) with I18nSupport with Logging {
 
   val providerId = CredentialsProvider.ID
   val Email = "email"
@@ -86,12 +86,12 @@ class PasswordChangeController @Inject() (implicit
                   Mailer.forgotPassword(email, link = routes.PasswordChangeController.specifyResetPassword(tokenUser.id).absoluteURL())
                 }
               }
-              case Failure(t) => Logger.error("handleStartResetPassword: " + t.getMessage)
+              case Failure(t) => logger.error("handleStartResetPassword: " + t.getMessage)
             }
 
           }
           case None => {
-            Logger.info(s"handleStartResetPassword: no user found: ${email}")
+            logger.info(s"handleStartResetPassword: no user found: ${email}")
             // Don't send out to unknown
             //Mailer.forgotPasswordUnknowAddress(email)(mailService)
 

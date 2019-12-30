@@ -15,7 +15,7 @@ import play.api.Configuration
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import play.api.mvc.{ Action, Controller }
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import utils.auth.JwtEnv
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -35,7 +35,8 @@ import scala.concurrent.duration._
  */
 class CredentialsAuthController @Inject() (
   implicit
-  val messagesApi: MessagesApi,
+  val components: ControllerComponents,
+  messagesApi: MessagesApi,
   silhouette: Silhouette[JwtEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
@@ -44,7 +45,7 @@ class CredentialsAuthController @Inject() (
   configuration: Configuration,
   ec: ExecutionContext,
   clock: Clock)
-  extends Controller with I18nSupport {
+  extends AbstractController(components) with I18nSupport with Logger {
 
   /**
    * Converts the JSON into a `SignInForm.Data` object.

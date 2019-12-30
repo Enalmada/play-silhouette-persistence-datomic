@@ -16,18 +16,21 @@
 
 package utils.persistence
 
+import com.typesafe.config.ConfigObject
 import datomisca.{ Connection, Datomic }
-import play.api.{ Configuration, Logger }
+import play.api.{ Configuration, Logging }
 
 import scala.util.Try
 
-class DatomiscaPlayPlugin(configuration: Configuration) {
+class DatomiscaPlayPlugin(configuration: Configuration) extends Logging {
 
-  val conf = {
+  val conf: Configuration = {
     val conf0 = configuration
-    conf0.getConfig("datomisca.uri") match {
+    conf0.getOptional[Configuration]("datomisca.uri") match {
       case None => conf0
-      case Some(conf1) => conf0 ++ conf1 // conf1 withFallback conf0
+      // case Some(conf1) => conf0 ++ conf1 // conf1 withFallback conf0
+      case Some(conf1) => conf1.withFallback(conf0)
+
     }
   }
 
@@ -36,7 +39,7 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
    * It crashes with runtime exception if not found
    */
   def uri(id: String): String =
-    conf.getString(id) getOrElse {
+    conf.getOptional[String](id) getOrElse {
       throw new IllegalArgumentException(s"$id not found")
     }
 
@@ -45,7 +48,7 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
    *
    * @return Some(uri) if found and None if not found
    */
-  def safeUri(id: String): Option[String] = conf.getString(id)
+  def safeUri(id: String): Option[String] = conf.getOptional[String](id)
 
   /**
    * Creates a Datomic connection (or throws a RuntimeException):
@@ -73,9 +76,9 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
   def safeConnect(id: String): Try[Connection] = Try(connect(id))
 
   def onStart(): Unit = {
-    import scala.collection.JavaConversions._
-    configuration.getObject("datomisca.uri") foreach { obj =>
-      obj.toMap foreach {
+    import scala.collection.JavaConverters._
+    configuration.getOptional[ConfigObject]("datomisca.uri") foreach { obj =>
+      obj.asScala.toMap foreach {
         case (k, v) =>
           if (v.valueType == com.typesafe.config.ConfigValueType.STRING) {
             val uriStr = v.unwrapped.toString
@@ -83,13 +86,13 @@ class DatomiscaPlayPlugin(configuration: Configuration) {
               uriStr startsWith "datomic:"
             }
             val uri = new java.net.URI(uriStr drop 8)
-            Logger.info(
+            logger.info(
               s"""DatomiscaPlayPlugin found datomisca.uri config with,
-                 |{
-                 |  config key:      $k
-                 |  storage service: ${uri.getScheme}
-                 |  db URI path:     ${uri.getAuthority}${uri.getPath}
-                 |}""".stripMargin
+               |{
+               |  config key:      $k
+               |  storage service: ${uri.getScheme}
+               |  db URI path:     ${uri.getAuthority}${uri.getPath}
+               |}""".stripMargin
             )
           }
       }

@@ -6,8 +6,8 @@ import datomiscadao.DB
 import scala.concurrent.ExecutionContext
 
 case class PersistenceDBVersion(
-                                 id: Long = -1,
-                                 version: Int = 0)
+  id: Long = -1,
+  version: Int = 0)
 
 object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
@@ -25,11 +25,11 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
   implicit val reader: EntityReader[PersistenceDBVersion] = (
     ID.read[Long] and
-      Schema.version.read[Int]) (PersistenceDBVersion.apply _)
+    Schema.version.read[Int])(PersistenceDBVersion.apply _)
 
   implicit val writer: PartialAddEntityWriter[PersistenceDBVersion] = (
     ID.write[Long] and
-      Schema.version.write[Int]) (unlift(PersistenceDBVersion.unapply))
+    Schema.version.write[Int])(unlift(PersistenceDBVersion.unapply))
 
   def create(dbVersion: PersistenceDBVersion)(implicit conn: Connection, ec: ExecutionContext): Long = {
 

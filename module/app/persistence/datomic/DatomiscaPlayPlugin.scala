@@ -17,8 +17,8 @@
 package persistence.datomic
 
 import com.typesafe.config.ConfigObject
-import datomisca.{Connection, Datomic}
-import play.api.{Configuration, Logging}
+import datomisca.{ Connection, Datomic }
+import play.api.{ Configuration, Logging }
 
 import scala.util.Try
 
@@ -75,22 +75,22 @@ class DatomiscaPlayPlugin(configuration: Configuration) extends Logging {
   def onStart(): Unit = {
     import scala.collection.JavaConverters._
     configuration.getOptional[ConfigObject]("datomisca.uri") foreach { obj =>
-      obj.asScala.toMap foreach { case (k, v) =>
-        if (v.valueType == com.typesafe.config.ConfigValueType.STRING) {
-          val uriStr = v.unwrapped.toString
-          assert {
-            uriStr startsWith "datomic:"
-          }
-          val uri = new java.net.URI(uriStr drop 8)
-          logger.info(
-            s"""DatomiscaPlayPlugin found datomisca.uri config with,
+      obj.asScala.toMap foreach {
+        case (k, v) =>
+          if (v.valueType == com.typesafe.config.ConfigValueType.STRING) {
+            val uriStr = v.unwrapped.toString
+            assert {
+              uriStr startsWith "datomic:"
+            }
+            val uri = new java.net.URI(uriStr drop 8)
+            logger.info(
+              s"""DatomiscaPlayPlugin found datomisca.uri config with,
                |{
                |  config key:      $k
                |  storage service: ${uri.getScheme}
                |  db URI path:     ${uri.getAuthority}${uri.getPath}
-               |}""".stripMargin
-          )
-        }
+               |}""".stripMargin)
+          }
       }
     }
   }

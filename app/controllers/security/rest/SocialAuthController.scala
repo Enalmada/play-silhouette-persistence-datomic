@@ -6,33 +6,34 @@ import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.impl.providers._
 import javax.inject.Inject
 import models.UserService
+import play.api.Logging
 import play.api.cache.SyncCacheApi
-import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
-import play.api.libs.concurrent.Execution.Implicits._
+import play.api.i18n.{ I18nSupport, Messages }
 import play.api.libs.json.Json
 import play.api.mvc._
 import utils.auth.JwtEnv
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.postfixOps
 
 /**
  * The social auth controller.
  *
- * @param messagesApi            The Play messages API.
  * @param silhouette             The Silhouette environment.
  * @param userService            The user service implementation.
  * @param authInfoRepository     The auth info service implementation.
  * @param socialProviderRegistry The social provider registry.
  */
 class SocialAuthController @Inject() (
-  val messagesApi: MessagesApi,
+  implicit
+  ec: ExecutionContext,
+  components: ControllerComponents,
   silhouette: Silhouette[JwtEnv],
   userService: UserService,
   authInfoRepository: AuthInfoRepository,
   socialProviderRegistry: SocialProviderRegistry,
-  cache: SyncCacheApi) extends Controller with I18nSupport with Logger {
+  cache: SyncCacheApi) extends AbstractController(components) with I18nSupport with Logging {
 
   /**
    * Authenticates a user against a social provider.

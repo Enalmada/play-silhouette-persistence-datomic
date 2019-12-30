@@ -1,13 +1,13 @@
 package persistence.datomic
 
-import java.time.{LocalDateTime, ZoneId}
-import java.util.{Date, UUID}
+import java.time.{ LocalDateTime, ZoneId }
+import java.util.{ Date, UUID }
 
 import datomic.Peer
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 case class TokenUser(id: UUID = UUID.randomUUID(), email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L * 14), isSignUp: Boolean = false) extends Token {
   def isExpired: Boolean = expirationTime.isBefore(LocalDateTime.now())
@@ -37,15 +37,15 @@ object TokenUser extends DB[TokenUser] {
 
   implicit val reader: EntityReader[TokenUser] = (
     Schema.id.read[UUID] and
-      Schema.email.read[String] and
-      Schema.expirationTime.read[Date].map(dateToLocalDateTime) and
-      Schema.isSignUp.read[Boolean]) (TokenUser.apply _)
+    Schema.email.read[String] and
+    Schema.expirationTime.read[Date].map(dateToLocalDateTime) and
+    Schema.isSignUp.read[Boolean])(TokenUser.apply _)
 
   implicit val writer: PartialAddEntityWriter[TokenUser] = (
     Schema.id.write[UUID] and
-      Schema.email.write[String] and
-      Schema.expirationTime.write[Date].contramap(localDateTimeToDate) and
-      Schema.isSignUp.write[Boolean]) (unlift(TokenUser.unapply))
+    Schema.email.write[String] and
+    Schema.expirationTime.write[Date].contramap(localDateTimeToDate) and
+    Schema.isSignUp.write[Boolean])(unlift(TokenUser.unapply))
 
   private val hoursTillExpiry = 24L
 
