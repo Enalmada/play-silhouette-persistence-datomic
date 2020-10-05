@@ -37,6 +37,8 @@ val appDependencies = Seq(
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
+* **0.1.13** [release on 2019-12-30]
+  * Silhouette 6.1.1 
 * **0.1.12** [release on 2019-12-16]
     * Play 2.8.0 and scala 2.12.10    
 * **0.1.11** [release on 2019-12-16]

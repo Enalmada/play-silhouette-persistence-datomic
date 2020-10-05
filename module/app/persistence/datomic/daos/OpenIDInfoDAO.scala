@@ -11,11 +11,12 @@ import persistence.datomic.DatomicAuthService
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
+import scala.reflect.ClassTag
 
 /**
  * The DAO to persist the OAuth1 information.
  */
-final class OpenIDInfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
+final class OpenIDInfoDAO @Inject() (implicit override val classTag: ClassTag[OpenIDInfo], myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OpenIDInfo] {
 
   implicit val conn = myDatomisca.conn

@@ -11,13 +11,14 @@ import persistence.datomic.DatomicAuthService
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
+import scala.reflect.ClassTag
 
 /**
  * The DAO to persist the password information.
  *
  * Note: Not thread safe, demo only.
  */
-final class PasswordInfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
+final class PasswordInfoDAO @Inject() (implicit override val classTag: ClassTag[PasswordInfo], myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[PasswordInfo] {
 
   implicit val conn = myDatomisca.conn

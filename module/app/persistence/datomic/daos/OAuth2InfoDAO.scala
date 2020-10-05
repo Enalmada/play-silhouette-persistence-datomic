@@ -1,7 +1,7 @@
 package persistence.datomic.daos
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import com.mohiva.play.silhouette.impl.providers.OAuth2Info
+import com.mohiva.play.silhouette.impl.providers.{ OAuth2Info }
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
@@ -11,11 +11,12 @@ import persistence.datomic.DatomicAuthService
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
+import scala.reflect.ClassTag
 
 /**
  * The DAO to persist the OAuth2 information.
  */
-final class OAuth2InfoDAO @Inject() (implicit myDatomisca: DatomicAuthService, ec: ExecutionContext)
+final class OAuth2InfoDAO @Inject() (implicit override val classTag: ClassTag[OAuth2Info], myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OAuth2Info] {
 
   implicit val conn = myDatomisca.conn
