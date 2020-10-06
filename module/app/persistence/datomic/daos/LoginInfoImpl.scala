@@ -6,6 +6,7 @@ import datomisca._
 import datomiscadao.DB
 import scala.concurrent.ExecutionContext
 import scala.language.reflectiveCalls
+import Queries._
 
 object LoginInfoImpl extends DB[LoginInfo] {
 
@@ -38,18 +39,17 @@ object LoginInfoImpl extends DB[LoginInfo] {
     Schema.providerKey.write[String])(unlift(LoginInfo.unapply))
 
   def find(loginInfo: LoginInfo)(implicit conn: Connection): Option[Long] = {
-    val query = Query(
-      """
+    val query = query"""
     [
       :find ?l
-      :in $ ?providerId ?providerKey
+      :in $$ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]
     ]
-      """)
+      """
 
-    LoginInfoImpl.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey)).map(_._1)
+    LoginInfoImpl.headOptionWithId(Datomic.q(query, Datomic.database(), loginInfo.providerID, loginInfo.providerKey)).map(_._1)
 
   }
 

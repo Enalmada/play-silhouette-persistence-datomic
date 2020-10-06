@@ -55,7 +55,7 @@ class SignUpController @Inject() (implicit
    * @return The result to display.
    */
   def submit = silhouette.UnsecuredAction.async(parse.default) { implicit request =>
-    SignUpForm.form.bindFromRequest.fold(
+    SignUpForm.form.bindFromRequest().fold(
       form => Future.successful(BadRequest(views.html.signUp(form))),
       data => {
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)

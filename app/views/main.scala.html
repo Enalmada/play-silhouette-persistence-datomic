@@ -29,21 +29,21 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="@routes.ApplicationController.index">Silhouette Seed Template</a>
+                    <a class="navbar-brand" href="@routes.ApplicationController.index()">Silhouette Seed Template</a>
                 </div>
                 <nav class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="@routes.ApplicationController.index">@messagesProvider.messages("home")</a></li>
-                        <li><a href="@routes.ApplicationController.admin">@messagesProvider.messages("admin")</a></li>
+                        <li><a href="@routes.ApplicationController.index()">@messagesProvider.messages("home")</a></li>
+                        <li><a href="@routes.ApplicationController.admin()">@messagesProvider.messages("admin")</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                     @user.map { u =>
-                    <li><a href="@routes.ApplicationController.index">@u.fullName</a></li>
-                    <li><a href="@controllers.security.web.routes.PasswordChangeController.startChangePassword">@messagesProvider.messages("specify.password.button")</a></li>
-                    <li><a href="@routes.ApplicationController.signOut">@messagesProvider.messages("sign.out")</a></li>
+                    <li><a href="@routes.ApplicationController.index()">@u.fullName</a></li>
+                    <li><a href="@controllers.security.web.routes.PasswordChangeController.startChangePassword()">@messagesProvider.messages("specify.password.button")</a></li>
+                    <li><a href="@routes.ApplicationController.signOut()">@messagesProvider.messages("sign.out")</a></li>
                     }.getOrElse {
-                        <li><a href="@controllers.security.web.routes.SignInController.view">@messagesProvider.messages("sign.in")</a></li>
-                        <li><a href="@controllers.security.web.routes.SignUpController.view">@messagesProvider.messages("sign.up")</a></li>
+                        <li><a href="@controllers.security.web.routes.SignInController.view()">@messagesProvider.messages("sign.in")</a></li>
+                        <li><a href="@controllers.security.web.routes.SignUpController.view()">@messagesProvider.messages("sign.up")</a></li>
                     }
                     </ul>
                 </nav>

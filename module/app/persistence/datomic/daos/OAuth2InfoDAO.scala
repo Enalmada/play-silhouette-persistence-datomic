@@ -1,7 +1,7 @@
 package persistence.datomic.daos
 
 import com.mohiva.play.silhouette.api.LoginInfo
-import com.mohiva.play.silhouette.impl.providers.{ OAuth2Info }
+import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
@@ -12,6 +12,7 @@ import persistence.datomic.DatomicAuthService
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 import scala.reflect.ClassTag
+import Queries._
 
 /**
  * The DAO to persist the OAuth2 information.
@@ -110,19 +111,18 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
     Schema.params.writeOpt[String].contramap(mapToString))(unlift(OAuth2Info.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OAuth2Info)] = {
-    val query = Query(
-      """
+    val query = query"""
     [
       :find ?e
-      :in $ ?providerId ?providerKey
+      :in $$ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/oAuth2Info ?e]
     ]
-      """)
+      """
 
-    DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
+    DB.headOptionWithId(Datomic.q(query, Datomic.database(), loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
   }
 

@@ -1,6 +1,6 @@
 @(signInForm: Form[forms.SignInForm.SignInData], socialProviders: com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
-@import b3.inline.fieldConstructor
+@implicitFieldConstructor = @{ b3.inline.fieldConstructor() }
 @import controllers.security.web._
 
 @main(messagesProvider.messages("sign.in.title")) {
@@ -14,10 +14,10 @@
         <legend>@messagesProvider.messages("sign.in.credentials")</legend>
         @helper.form(action = routes.SignInController.submit()) {
             @helper.CSRF.formField
-            @b3.email(signInForm("email"), '_hiddenLabel -> messagesProvider.messages("email"), 'placeholder -> messagesProvider.messages("email"), 'class -> "form-control input-lg")
-            @b3.password(signInForm("password"), '_hiddenLabel -> messagesProvider.messages("password"), 'placeholder -> messagesProvider.messages("password"), 'class -> "form-control input-lg")
-            <a href="@routes.PasswordChangeController.startResetPassword">@messagesProvider.messages("forgot.password")</a>
-            @b3.checkbox(signInForm("rememberMe"), '_text -> messagesProvider.messages("remember.me"), 'checked -> true)
+            @b3.email(signInForm("email"), Symbol("_hiddenLabel") -> messagesProvider.messages("email"), Symbol("placeholder") -> messagesProvider.messages("email"), Symbol("class") -> "form-control input-lg")
+            @b3.password(signInForm("password"), Symbol("_hiddenLabel") -> messagesProvider.messages("password"), Symbol("placeholder") -> messagesProvider.messages("password"), Symbol("class") -> "form-control input-lg")
+            <a href="@routes.PasswordChangeController.startResetPassword()">@messagesProvider.messages("forgot.password")</a>
+            @b3.checkbox(signInForm("rememberMe"), Symbol("_text") -> messagesProvider.messages("remember.me"), Symbol("checked") -> true)
             <div class="form-group">
                 <div>
                     <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block">@messagesProvider.messages("sign.in")</button>
@@ -26,7 +26,7 @@
         }
 
         <div>
-            <p class="not-a-member">@messagesProvider.messages("not.a.member") <a href="@routes.SignUpController.view">@messagesProvider.messages("sign.up.now")</a></p>
+            <p class="not-a-member">@messagesProvider.messages("not.a.member") <a href="@routes.SignUpController.view()">@messagesProvider.messages("sign.up.now")</a></p>
         </div>
 
         @if(socialProviders.providers.nonEmpty) {

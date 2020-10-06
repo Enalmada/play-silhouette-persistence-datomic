@@ -10,7 +10,7 @@ object Mailer {
 
   implicit def html2String(html: Html): String = html.toString
 
-  def welcome(signUpData: SignUpData, link: String)(implicit mailService: MailService, messagesProvider: MessagesProvider) {
+  def welcome(signUpData: SignUpData, link: String)(implicit mailService: MailService, messagesProvider: MessagesProvider): Unit = {
     mailService.sendEmailAsync(signUpData.email)(
       subject = messagesProvider.messages("mail.welcome.subject"),
       bodyHtml = link,
@@ -18,7 +18,7 @@ object Mailer {
     )
   }
 
-  def forgotPassword(email: String, link: String)(implicit mailService: MailService, messagesProvider: MessagesProvider) {
+  def forgotPassword(email: String, link: String)(implicit mailService: MailService, messagesProvider: MessagesProvider): Unit = {
     mailService.sendEmailAsync(email)(
       subject = messagesProvider.messages("mail.forgotpwd.subject"),
       bodyHtml = link,

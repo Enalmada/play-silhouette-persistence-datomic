@@ -61,7 +61,7 @@ class SignInController @Inject() (
    * @return The result to display.
    */
   def submit = silhouette.UnsecuredAction.async(parse.default) { implicit request =>
-    SignInForm.form.bindFromRequest.fold(
+    SignInForm.form.bindFromRequest().fold(
       form => Future.successful(BadRequest(views.html.signIn(form, socialProviderRegistry))),
       data => {
         val credentials = Credentials(data.email, data.password)

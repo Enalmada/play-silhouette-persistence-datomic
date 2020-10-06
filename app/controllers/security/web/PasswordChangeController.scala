@@ -59,7 +59,7 @@ class PasswordChangeController @Inject() (implicit
     "password1" -> passwordValidation,
     "password2" -> nonEmptyText,
     "token" -> uuid
-  ) verifying (messagesProvider.messages("passwords.not.equal"), passwords => passwords._2 == passwords._1))
+  ).verifying(messagesProvider.messages("passwords.not.equal"), passwords => passwords._2 == passwords._1))
 
   private def notFoundDefault(implicit request: RequestHeader) =
     Future.successful(NotFound(views.html.auth.invalidToken()))
@@ -74,7 +74,7 @@ class PasswordChangeController @Inject() (implicit
   }
 
   def handleStartResetPassword = Action.async(parse.default) { implicit request =>
-    pwResetForm.bindFromRequest.fold(
+    pwResetForm.bindFromRequest().fold(
       errors => Future.successful(BadRequest(views.html.auth.startResetPassword(errors))),
       email => {
         authInfoRepository.find(LoginInfo(CredentialsProvider.ID, email))(ClassTag(classOf[PasswordInfo])).map {
@@ -108,7 +108,7 @@ class PasswordChangeController @Inject() (implicit
   def specifyResetPassword(tokenId: UUID) = Action.async(parse.default) { implicit request =>
     tokenService.retrieve(tokenId).flatMap {
       case Some(token) if (!token.isSignUp && !token.isExpired) => {
-        Future.successful(Ok(views.html.auth.specifyResetPassword(tokenId.toString, passwordsForm)))
+        Future.successful(Ok(views.html.auth.specifyResetPassword(tokenId.toString, passwordsForm())))
       }
       case Some(token) => {
         tokenService.consume(tokenId)
@@ -124,7 +124,7 @@ class PasswordChangeController @Inject() (implicit
    * Saves the new password and authenticates the user
    */
   def handleResetPassword = Action.async(parse.default) { implicit request =>
-    passwordsForm.bindFromRequest.fold(
+    passwordsForm().bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(views.html.auth.specifyResetPassword(formWithErrors.data("token"), formWithErrors))),
       passwords => {
         val tokenId = passwords._3
@@ -173,7 +173,7 @@ class PasswordChangeController @Inject() (implicit
   )
 
   def startChangePassword = silhouette.SecuredAction.async(parse.default) { implicit request =>
-    Future.successful(Ok(views.html.auth.changePassword(request.identity, changePasswordForm)))
+    Future.successful(Ok(views.html.auth.changePassword(request.identity, changePasswordForm())))
   }
 
   /**
@@ -181,7 +181,7 @@ class PasswordChangeController @Inject() (implicit
    */
   def handleChangePassword = silhouette.SecuredAction.async(parse.default) { implicit request =>
 
-    changePasswordForm.bindFromRequest.fold(
+    changePasswordForm().bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(views.html.auth.changePassword(request.identity, formWithErrors))),
       changeInfo => {
         val user = request.identity
@@ -195,7 +195,7 @@ class PasswordChangeController @Inject() (implicit
           }
         }.recover {
           case e: ProviderException =>
-            BadRequest(views.html.auth.changePassword(request.identity, changePasswordForm.withError("currentPassword", "Does not match current password!")))
+            BadRequest(views.html.auth.changePassword(request.identity, changePasswordForm().withError("currentPassword", "Does not match current password!")))
         }
       }
     )

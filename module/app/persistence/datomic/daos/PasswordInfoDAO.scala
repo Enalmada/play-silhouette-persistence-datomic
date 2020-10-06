@@ -12,6 +12,7 @@ import persistence.datomic.DatomicAuthService
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 import scala.reflect.ClassTag
+import Queries._
 
 /**
  * The DAO to persist the password information.
@@ -102,19 +103,18 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
     Schema.salt.writeOpt[String])(unlift(PasswordInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, PasswordInfo)] = {
-    val query = Query(
-      """
+    val query = query"""
     [
       :find ?e
-      :in $ ?providerId ?providerKey
+      :in $$ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/passwordInfo ?e]
     ]
-      """)
+      """
 
-    DB.headOptionWithId(Datomic.q(query, Datomic.database, loginInfo.providerID, loginInfo.providerKey), Datomic.database())
+    DB.headOptionWithId(Datomic.q(query, Datomic.database(), loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 
   }
 

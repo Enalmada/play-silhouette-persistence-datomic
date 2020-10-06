@@ -51,9 +51,9 @@ class CredentialsAuthController @Inject() (
    * Converts the JSON into a `SignInForm.Data` object.
    */
   implicit val dataReads = (
-    (__ \ 'email).read[String] and
-    (__ \ 'password).read[String] and
-    (__ \ 'rememberMe).read[Boolean]
+    (__ \ Symbol("email")).read[String] and
+    (__ \ Symbol("password")).read[String] and
+    (__ \ Symbol("rememberMe")).read[Boolean]
   )(SignInForm.SignInData.apply _)
 
   /**

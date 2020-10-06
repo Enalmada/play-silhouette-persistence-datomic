@@ -21,6 +21,7 @@ import datomisca.{ Connection, Datomic }
 import play.api.{ Configuration, Logging }
 
 import scala.util.Try
+import scala.jdk.CollectionConverters._
 
 class DatomiscaPlayPlugin(configuration: Configuration) extends Logging {
 
@@ -73,7 +74,6 @@ class DatomiscaPlayPlugin(configuration: Configuration) extends Logging {
   def safeConnect(id: String): Try[Connection] = Try(connect(id))
 
   def onStart(): Unit = {
-    import scala.collection.JavaConverters._
     configuration.getOptional[ConfigObject]("datomisca.uri") foreach { obj =>
       obj.asScala.toMap foreach {
         case (k, v) =>

@@ -1,12 +1,12 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.13"
+version := "0.2.0"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
-val silhouetteVersion = "6.1.1"
+val silhouetteVersion = "7.0.0"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.3"
 
 // datomisca not cross compiled with 12
 // crossScalaVersions := Seq(scalaVersion.value, "2.12.10")
@@ -17,9 +17,9 @@ libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion % "provided",
   "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion % "provided",
   "com.mohiva" %% "play-silhouette-testkit" % silhouetteVersion % "test",
-  "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
+  "com.github.enalmada" %% "datomisca" % "0.8.0" % "provided",
   "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.17" % "provided",
+  "com.github.enalmada" %% "datomisca-dao" % "0.2.0" % "provided",
   "net.codingwell" %% "scala-guice" % "4.2.6" % "provided",
   "com.iheart" %% "ficus" % "1.4.7" % "provided",
   ws,

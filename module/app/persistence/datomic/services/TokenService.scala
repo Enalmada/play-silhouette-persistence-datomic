@@ -43,5 +43,5 @@ trait TokenService[T <: Token] {
    *
    * @param id The ID of the token to consume.
    */
-  def consume(id: UUID)
+  def consume(id: UUID): Unit
 }

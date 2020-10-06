@@ -83,7 +83,7 @@ class DatomicAuthService @Inject() (implicit env: play.Environment, config: play
   }
 
   def postMigrations() = {
-    val dbVersion = PersistenceDBVersion.getDbVersion
+    val dbVersion = PersistenceDBVersion.getDbVersion()
     logger.info(s"PersistenceDBVersion: ${dbVersion.version}")
   }
 
