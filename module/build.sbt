@@ -1,6 +1,6 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.14"
+version := "0.1.15"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
   "io.github.honeycomb-cheesecake" %% "play-silhouette-testkit" % silhouetteVersion % "test",
   "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
   "com.datomic" % "peer" % "1.0.7260" % "provided",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.17" % "provided",
+  "com.github.enalmada" %% "datomisca-dao" % "0.1.18" % "provided",
   "net.codingwell" %% "scala-guice" % "4.2.6" % "provided",
   "com.iheart" %% "ficus" % "1.4.7" % "provided",
   ws,

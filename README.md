@@ -23,21 +23,21 @@ curl -X POST http://localhost:9000/rest/signIn -H 'Content-Type: application/jso
 <dependency>
     <groupId>com.github.enalmada</groupId>
     <artifactId>play-silhouette-persistence-datomic_2.12</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
 </dependency>
 ```
 or
 
 ```scala
 val appDependencies = Seq(
-  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.14"
+  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.15"
 )
 ```
 
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
-* **0.1.14** [release on 2024-11-04]
+* **0.1.15** [release on 2024-11-04]
   * Silhouette 7.0.7
   * Datomic 1.0.7260
 * **0.1.13** [release on 2019-12-30]
