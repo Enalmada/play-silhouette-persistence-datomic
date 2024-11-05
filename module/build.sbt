@@ -1,24 +1,24 @@
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.1.13"
+version := "0.1.14"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
-val silhouetteVersion = "6.1.1"
+val silhouetteVersion = "7.0.7"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.12.18"
 
 // datomisca not cross compiled with 12
 // crossScalaVersions := Seq(scalaVersion.value, "2.12.10")
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-testkit" % silhouetteVersion % "test",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette" % silhouetteVersion % "provided",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-password-bcrypt" % silhouetteVersion % "provided",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-persistence" % silhouetteVersion % "provided",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-crypto-jca" % silhouetteVersion % "provided",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-testkit" % silhouetteVersion % "test",
   "com.quartethealth" %% "datomisca" % "0.7.1" % "provided",
-  "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
+  "com.datomic" % "peer" % "1.0.7260" % "provided",
   "com.github.enalmada" %% "datomisca-dao" % "0.1.17" % "provided",
   "net.codingwell" %% "scala-guice" % "4.2.6" % "provided",
   "com.iheart" %% "ficus" % "1.4.7" % "provided",

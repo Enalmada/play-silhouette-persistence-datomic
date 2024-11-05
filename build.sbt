@@ -3,9 +3,9 @@ import scalariform.formatter.preferences._
 
 name := "play-silhouette-seed"
 
-version := "5.0.0"
+version := "6.0.0"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.11"
 
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
@@ -20,20 +20,20 @@ resolvers ++= Seq(Resolver.bintrayRepo("thyming", "maven"), "clojars" at "https:
 libraryDependencies ++= Seq(
   guice,
   ehcache,
-  "com.mohiva" %% "play-silhouette" % "6.1.1",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "6.1.1",
-  "com.mohiva" %% "play-silhouette-persistence" % "6.1.1",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "6.1.1",
-  "com.mohiva" %% "play-silhouette-testkit" % "6.1.1" % "test",
-  "com.quartethealth" %% "datomisca" % "0.7.1",
-  "com.datomic" % "datomic-free" % "0.9.5697",
-  "com.github.enalmada" %% "datomisca-dao" % "0.1.17",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette" % "7.0.0",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-password-bcrypt" % "7.0.0",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-persistence" % "7.0.0",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-crypto-jca" % "7.0.0",
+  "io.github.honeycomb-cheesecake" %% "play-silhouette-testkit" % "7.0.0" % "test",
+  "com.github.enalmada" %% "datomisca" % "0.8.0",
+  "com.datomic" % "peer" % "0.9.5697",
+  "com.github.enalmada" %% "datomisca-dao" % "0.2.1",
   //"org.webjars" %% "webjars-play" % "2.6.0-M1",
-  "net.codingwell" %% "scala-guice" % "4.2.6",
-  "com.iheart" %% "ficus" % "1.4.7",
-  "com.adrianhurt" %% "play-bootstrap" % "1.2-P26-B3-SNAPSHOT",
-  "com.typesafe.play" %% "play-mailer" % "7.0.1",
-  "com.typesafe.play" %% "play-mailer-guice" % "7.0.1",
+  "net.codingwell" %% "scala-guice" % "4.2.11",
+  "com.iheart" %% "ficus" % "1.5.0",
+  "com.adrianhurt" %% "play-bootstrap" % "1.6.1-P28-B3",
+  "com.typesafe.play" %% "play-mailer" % "8.0.1",
+  "com.typesafe.play" %% "play-mailer-guice" % "8.0.1",
   specs2 % Test,
   filters
 )

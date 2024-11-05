@@ -23,20 +23,23 @@ curl -X POST http://localhost:9000/rest/signIn -H 'Content-Type: application/jso
 <dependency>
     <groupId>com.github.enalmada</groupId>
     <artifactId>play-silhouette-persistence-datomic_2.12</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.14</version>
 </dependency>
 ```
 or
 
 ```scala
 val appDependencies = Seq(
-  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.8"
+  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.14"
 )
 ```
 
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
+* **0.1.14** [release on 2024-11-04]
+  * Silhouette 7.0.7
+  * Datomic 1.0.7260
 * **0.1.13** [release on 2019-12-30]
   * Silhouette 6.1.1 
 * **0.1.12** [release on 2019-12-16]
@@ -68,3 +71,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
+## Release
+sbt +publishSigned
+sbt sonatypeRelease
