@@ -1,25 +1,26 @@
+
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.2.0"
+version := "0.2.1"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
-val silhouetteVersion = "7.0.0"
+val silhouetteVersion = "9.0.1"
 
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.15"
 
 // datomisca not cross compiled with 12
 // crossScalaVersions := Seq(scalaVersion.value, "2.12.10")
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-persistence" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % silhouetteVersion % "provided",
-  "com.mohiva" %% "play-silhouette-testkit" % silhouetteVersion % "test",
-  "com.github.enalmada" %% "datomisca" % "0.8.0" % "provided",
-  "com.datomic" % "datomic-free" % "0.9.5544" % "provided",
-  "com.github.enalmada" %% "datomisca-dao" % "0.2.0" % "provided",
+  "org.playframework.silhouette" %% "play-silhouette" % silhouetteVersion,
+  "org.playframework.silhouette" %% "play-silhouette-password-bcrypt" % silhouetteVersion,
+  "org.playframework.silhouette" %% "play-silhouette-testkit" % silhouetteVersion % "test",
+  "org.playframework.silhouette" %% "play-silhouette-persistence" % silhouetteVersion,
+  "org.playframework.silhouette" %% "play-silhouette-crypto-jca" % silhouetteVersion,
+  "com.github.enalmada" %% "datomisca" % "0.8.3" % "provided",
+  "com.datomic" % "peer" % "1.0.7260" % "provided",
+  "com.github.enalmada" %% "datomisca-dao" % "0.2.3" % "provided",
   "net.codingwell" %% "scala-guice" % "4.2.6" % "provided",
   "com.iheart" %% "ficus" % "1.4.7" % "provided",
   ws,

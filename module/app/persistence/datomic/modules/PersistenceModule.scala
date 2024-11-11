@@ -1,11 +1,11 @@
 package persistence.datomic.modules
 
 import com.google.inject.{ AbstractModule, Provides }
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.PasswordInfo
-import com.mohiva.play.silhouette.impl.providers.{ OAuth1Info, OAuth2Info, OpenIDInfo }
-import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
-import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.api.util.PasswordInfo
+import play.silhouette.impl.providers.{ OAuth1Info, OAuth2Info, OpenIDInfo }
+import play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import play.silhouette.persistence.repositories.DelegableAuthInfoRepository
 import net.codingwell.scalaguice.ScalaModule
 import persistence.datomic.DatomicAuthService
 import persistence.datomic.daos.{ OAuth1InfoDAO, OAuth2InfoDAO, OpenIDInfoDAO, PasswordInfoDAO }

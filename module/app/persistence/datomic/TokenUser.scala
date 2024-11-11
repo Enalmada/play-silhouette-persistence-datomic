@@ -8,7 +8,6 @@ import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
 import scala.concurrent.{ ExecutionContext, Future }
-import Queries._
 
 case class TokenUser(id: UUID = UUID.randomUUID(), email: String, expirationTime: LocalDateTime = LocalDateTime.now().plusHours(24L * 14), isSignUp: Boolean = false) extends Token {
   def isExpired: Boolean = expirationTime.isBefore(LocalDateTime.now())
@@ -55,12 +54,12 @@ object TokenUser extends DB[TokenUser] {
   }
 
   def findAll()(implicit conn: Connection): Seq[TokenUser] = {
-    val queryAll = query""" [ :find ?a :where [?a :tokenUser/email] ] """
+    val queryAll = Query(""" [ :find ?a :where [?a :tokenUser/email] ] """)
     list(Datomic.q(queryAll, Datomic.database()))
   }
 
   def findByEmail(email: String)(implicit conn: Connection): Seq[TokenUser] = {
-    val query = query""" [ :find ?a :in $$ ?email :where [?a :tokenUser/email ?email] ] """
+    val query = Query(""" [ :find ?a :in $$ ?email :where [?a :tokenUser/email ?email] ] """)
     list(Datomic.q(query, Datomic.database(), email))
   }
 

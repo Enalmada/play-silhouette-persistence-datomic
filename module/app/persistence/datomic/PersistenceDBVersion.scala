@@ -4,7 +4,6 @@ import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
 import scala.concurrent.ExecutionContext
-import Queries._
 
 case class PersistenceDBVersion(
   id: Long = -1,
@@ -51,17 +50,19 @@ object PersistenceDBVersion extends DB[PersistenceDBVersion] {
 
   }
 
-  val queryAll = query"""
+  val queryAll = Query("""
     [
       :find ?e
       :where
         [?e :persistenceDBVersion/version]
     ]
-    """
+    """)
 
   def getDbVersion()(implicit conn: Connection, ec: ExecutionContext): PersistenceDBVersion = {
 
-    PersistenceDBVersion.headOption(Datomic.q(queryAll, Datomic.database())) match {
+    val query = Datomic.q(queryAll, Datomic.database())
+
+    PersistenceDBVersion.headOption(query) match {
       case Some(dbVersion) => dbVersion
       case None => {
         val id = PersistenceDBVersion.create(PersistenceDBVersion())
