@@ -1,19 +1,21 @@
 package models
 
-import com.mohiva.play.silhouette.api.LoginInfo
-import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
+import datomisca.Connection
+import play.silhouette.api.LoginInfo
+import play.silhouette.impl.providers.CommonSocialProfile
+
 import javax.inject.Inject
 import utils.persistence.DatomicService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * Handles actions to users.
  */
 class UserServiceImpl @Inject() (implicit myDatomisca: DatomicService, ec: ExecutionContext) extends UserService {
 
-  implicit val conn = myDatomisca.conn
-  protected[this] val e = conn
+  implicit val conn: Connection = myDatomisca.conn
+  protected[this] val e: Connection = conn
 
   /**
    * Retrieves a user that matches the specified login info.

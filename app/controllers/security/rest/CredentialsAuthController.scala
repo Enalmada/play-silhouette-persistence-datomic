@@ -1,24 +1,25 @@
 package controllers.security.rest
 
-import com.mohiva.play.silhouette.api.Authenticator.Implicits._
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
-import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
-import com.mohiva.play.silhouette.impl.providers._
+import play.silhouette.api.Authenticator.Implicits._
+import play.silhouette.api._
+import play.silhouette.api.exceptions.ProviderException
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.api.util.{Clock, Credentials}
+import play.silhouette.impl.exceptions.IdentityNotFoundException
+import play.silhouette.impl.providers._
 import forms.SignInForm
+
 import javax.inject.Inject
 import models.UserService
 import net.ceedubs.ficus.Ficus._
 import play.api.Configuration
-import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import play.api.mvc.{ AbstractController, ControllerComponents }
+import play.api.mvc.{AbstractController, Action, ControllerComponents}
 import utils.auth.JwtEnv
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.duration._
 
 /**
@@ -50,7 +51,7 @@ class CredentialsAuthController @Inject() (
   /**
    * Converts the JSON into a `SignInForm.Data` object.
    */
-  implicit val dataReads = (
+  implicit val dataReads: Reads[SignInForm.SignInData] = (
     (__ \ Symbol("email")).read[String] and
     (__ \ Symbol("password")).read[String] and
     (__ \ Symbol("rememberMe")).read[Boolean]
@@ -61,7 +62,7 @@ class CredentialsAuthController @Inject() (
    *
    * @return The result to display.
    */
-  def authenticate = Action.async(parse.json) { implicit request =>
+  def authenticate: Action[JsValue] = Action.async(parse.json) { implicit request =>
     request.body.validate[SignInForm.SignInData].map { data =>
       credentialsProvider.authenticate(Credentials(data.email, data.password)).flatMap { loginInfo =>
         userService.retrieve(loginInfo).flatMap {

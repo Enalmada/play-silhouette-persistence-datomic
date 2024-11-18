@@ -1,6 +1,6 @@
 package models
 
-import com.mohiva.play.silhouette.api.{ Identity, LoginInfo }
+import play.silhouette.api.{ Identity, LoginInfo }
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
@@ -8,7 +8,6 @@ import persistence.datomic.daos.LoginInfoImpl
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
-import Queries._
 
 /**
  * The user object.
@@ -111,16 +110,16 @@ object User extends DB[User] {
   )(unlift(User.unapply))
 
   def findByLoginInfo(loginInfo: LoginInfo)(implicit conn: Connection): Option[User] = {
-    val query = query"""
+    val query = Query("""
     [
       :find ?e
-      :in $$ ?providerId ?providerKey
+      :in $ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]
         [?e :user/loginInfo ?l]
     ]
-      """
+      """)
 
     headOption(Datomic.q(query, Datomic.database(), loginInfo.providerID, loginInfo.providerKey))
 

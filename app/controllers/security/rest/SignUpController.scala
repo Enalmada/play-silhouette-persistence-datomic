@@ -1,20 +1,22 @@
 package controllers.security.rest
 
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.services.AvatarService
-import com.mohiva.play.silhouette.api.util.PasswordHasher
-import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import datomisca.Connection
+import play.silhouette.api._
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.api.services.AvatarService
+import play.silhouette.api.util.PasswordHasher
+import play.silhouette.impl.providers.CredentialsProvider
 import forms.SignUpForm
+
 import javax.inject.Inject
-import models.{ User, UserService }
-import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
+import models.{User, UserService}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.libs.json.Json
-import play.api.mvc.{ AbstractController, ControllerComponents }
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.auth.JwtEnv
 import utils.persistence.DatomicService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * The sign up controller.
@@ -39,8 +41,8 @@ class SignUpController @Inject() (
   myDatomisca: DatomicService)
   extends AbstractController(components) with I18nSupport with Logger {
 
-  implicit val conn = myDatomisca.conn
-  protected[this] val e = conn
+  implicit val conn: Connection = myDatomisca.conn
+  protected[this] val e: Connection = conn
 
   /**
    * Registers a new user.

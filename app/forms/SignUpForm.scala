@@ -2,7 +2,7 @@ package forms
 
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 /**
  * The form which handles the sign up process.
@@ -43,7 +43,7 @@ object SignUpForm {
     /**
      * Converts the [Date] object to Json and vice versa.
      */
-    implicit val jsonFormat = Json.format[SignUpData]
+    implicit val jsonFormat: OFormat[SignUpData] = Json.format[SignUpData]
   }
 
 }
