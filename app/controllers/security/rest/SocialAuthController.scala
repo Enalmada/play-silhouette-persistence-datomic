@@ -1,9 +1,9 @@
 package controllers.security.rest
 
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.impl.providers._
+import play.silhouette.api._
+import play.silhouette.api.exceptions.ProviderException
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.impl.providers._
 import javax.inject.Inject
 import models.UserService
 import play.api.Logging

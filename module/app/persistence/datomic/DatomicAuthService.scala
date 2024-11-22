@@ -11,7 +11,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 object DatomicAuthService {
   implicit var connOpt: Option[Connection] = None
 
-  implicit def conn() = connOpt.get
+  implicit def conn(): Connection = connOpt.get
 }
 
 @Singleton

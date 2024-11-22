@@ -1,12 +1,12 @@
 package controllers.security.web
 
-import com.mohiva.play.silhouette.api.Authenticator.Implicits._
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.{ Clock, Credentials }
-import com.mohiva.play.silhouette.impl.exceptions.IdentityNotFoundException
-import com.mohiva.play.silhouette.impl.providers._
+import play.silhouette.api.Authenticator.Implicits._
+import play.silhouette.api._
+import play.silhouette.api.exceptions.ProviderException
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.api.util.{ Clock, Credentials }
+import play.silhouette.impl.exceptions.IdentityNotFoundException
+import play.silhouette.impl.providers._
 import forms.SignInForm
 import javax.inject.Inject
 import models.UserService
@@ -66,7 +66,7 @@ class SignInController @Inject() (
       data => {
         val credentials = Credentials(data.email, data.password)
         credentialsProvider.authenticate(credentials).flatMap { loginInfo =>
-          val result = Redirect(controllers.routes.ApplicationController.index())
+          val result = Redirect(controllers.routes.ApplicationController.index)
           userService.retrieve(loginInfo).flatMap {
             case Some(user) =>
               val c = configuration.underlying
@@ -89,7 +89,7 @@ class SignInController @Inject() (
           }
         }.recover {
           case e: ProviderException =>
-            Redirect(routes.SignInController.view()).flashing("error" -> Messages("invalid.credentials"))
+            Redirect(routes.SignInController.view).flashing("error" -> Messages("invalid.credentials"))
         }
       }
     )

@@ -1,7 +1,7 @@
 package models
 
-import com.mohiva.play.silhouette.api.Authorization
-import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
+import play.silhouette.api.Authorization
+import play.silhouette.impl.authenticators.CookieAuthenticator
 import play.api.mvc.Request
 
 import scala.concurrent.Future

@@ -1,19 +1,21 @@
 package controllers.security.web
 
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.services.AvatarService
-import com.mohiva.play.silhouette.api.util.PasswordHasher
-import com.mohiva.play.silhouette.impl.providers._
+import datomisca.Connection
+import play.silhouette.api._
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.api.services.AvatarService
+import play.silhouette.api.util.PasswordHasher
+import play.silhouette.impl.providers._
 import forms.SignUpForm
+
 import javax.inject.Inject
-import models.{ Role, User, UserService }
-import play.api.i18n.{ I18nSupport, Messages }
-import play.api.mvc.{ AbstractController, ControllerComponents }
+import models.{Role, User, UserService}
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.auth.DefaultEnv
 import utils.persistence.DatomicService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
  * The `Sign Up` controller.
@@ -37,8 +39,8 @@ class SignUpController @Inject() (implicit
   myDatomisca: DatomicService)
   extends AbstractController(components) with I18nSupport {
 
-  implicit val conn = myDatomisca.conn
-  protected[this] val e = conn
+  implicit val conn: Connection = myDatomisca.conn
+  protected[this] val e: Connection = conn
 
   /**
    * Views the `Sign Up` page.
@@ -61,7 +63,7 @@ class SignUpController @Inject() (implicit
         val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
         userService.retrieve(loginInfo).flatMap {
           case Some(user) =>
-            Future.successful(Redirect(routes.SignUpController.view()).flashing("error" -> Messages("user.exists")))
+            Future.successful(Redirect(routes.SignUpController.view).flashing("error" -> Messages("user.exists")))
           case None =>
             val authInfo = passwordHasher.hash(data.password)
             val user = User().copy(
@@ -82,7 +84,7 @@ class SignUpController @Inject() (implicit
               authInfo <- authInfoRepository.add(loginInfo, authInfo)
               authenticator <- silhouette.env.authenticatorService.create(loginInfo)
               value <- silhouette.env.authenticatorService.init(authenticator)
-              result <- silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.ApplicationController.index()))
+              result <- silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.ApplicationController.index))
             } yield {
               silhouette.env.eventBus.publish(SignUpEvent(user, request))
               silhouette.env.eventBus.publish(LoginEvent(user, request))

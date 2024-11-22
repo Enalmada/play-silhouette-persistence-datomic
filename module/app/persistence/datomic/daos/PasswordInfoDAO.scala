@@ -1,8 +1,8 @@
 package persistence.datomic.daos
 
-import com.mohiva.play.silhouette.api.LoginInfo
-import com.mohiva.play.silhouette.api.util.PasswordInfo
-import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import play.silhouette.api.LoginInfo
+import play.silhouette.api.util.PasswordInfo
+import play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
@@ -12,7 +12,6 @@ import persistence.datomic.DatomicAuthService
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 import scala.reflect.ClassTag
-import Queries._
 
 /**
  * The DAO to persist the password information.
@@ -22,7 +21,7 @@ import Queries._
 final class PasswordInfoDAO @Inject() (implicit override val classTag: ClassTag[PasswordInfo], myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[PasswordInfo] {
 
-  implicit val conn = myDatomisca.conn
+  implicit val conn: Connection = myDatomisca.conn
   protected[this] val e = conn
 
   /**
@@ -103,7 +102,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
     Schema.salt.writeOpt[String])(unlift(PasswordInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, PasswordInfo)] = {
-    val query = query"""
+    val query = Query("""
     [
       :find ?e
       :in $$ ?providerId ?providerKey
@@ -112,7 +111,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
         [?l :loginInfo/providerKey ?providerKey]
         [?l :loginInfo/passwordInfo ?e]
     ]
-      """
+      """)
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database(), loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 

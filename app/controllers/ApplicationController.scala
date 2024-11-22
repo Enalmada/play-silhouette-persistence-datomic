@@ -1,10 +1,12 @@
 package controllers
 
-import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
+import datomisca.Connection
+import play.silhouette.api.{LogoutEvent, Silhouette}
+
 import javax.inject.Inject
-import models.{ Role, WithRole }
+import models.{Role, WithRole}
 import play.api.i18n.I18nSupport
-import play.api.mvc.{ AbstractController, ControllerComponents }
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.auth.DefaultEnv
 import utils.persistence.DatomicService
 
@@ -22,8 +24,8 @@ class ApplicationController @Inject() (implicit
   silhouette: Silhouette[DefaultEnv],
   datomicService: DatomicService) extends AbstractController(components) with I18nSupport {
 
-  implicit val conn = datomicService.conn
-  protected[this] val e = conn
+  implicit val conn: Connection = datomicService.conn
+  protected[this] val e: Connection = conn
 
   /**
    * Handles the index action.
@@ -44,7 +46,7 @@ class ApplicationController @Inject() (implicit
    * @return The result to display.
    */
   def signOut = silhouette.SecuredAction.async(parse.default) { implicit request =>
-    val result = Redirect(routes.ApplicationController.index())
+    val result = Redirect(routes.ApplicationController.index)
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, result)
   }

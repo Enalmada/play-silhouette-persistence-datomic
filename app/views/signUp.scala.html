@@ -1,7 +1,7 @@
 @(signInForm: Form[forms.SignUpForm.SignUpData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @import controllers.security.web._
-@implicitFieldConstructor = @{ b3.inline.fieldConstructor() }
+@implicitFieldConstructor = @{ b4.inline.fieldConstructor() }
 
 @main(messagesProvider.messages("sign.up.title")) {
     @request.flash.get("error").map { msg =>
@@ -12,19 +12,19 @@
     }
     <fieldset class="col-md-6 col-md-offset-3">
         <legend>@messagesProvider.messages("sign.up.account")</legend>
-        @helper.form(action = routes.SignUpController.submit()) {
+        @helper.form(action = routes.SignUpController.submit) {
             @helper.CSRF.formField
-            @b3.text(signInForm("firstName"), Symbol("_hiddenLabel") -> messagesProvider.messages("first.name"), Symbol("placeholder") -> messagesProvider.messages("first.name"), Symbol("class") -> "form-control input-lg")
-            @b3.text(signInForm("lastName"), Symbol("_hiddenLabel") -> messagesProvider.messages("last.name"), Symbol("placeholder") -> messagesProvider.messages("last.name"), Symbol("class") -> "form-control input-lg")
-            @b3.text(signInForm("email"), Symbol("_hiddenLabel") -> messagesProvider.messages("email"), Symbol("placeholder") -> messagesProvider.messages("email"), Symbol("class") -> "form-control input-lg")
-            @b3.password(signInForm("password"), Symbol("_hiddenLabel") -> messagesProvider.messages("password"), Symbol("placeholder") -> messagesProvider.messages("password"), Symbol("class") -> "form-control input-lg")
+            @b4.text(signInForm("firstName"), Symbol("_hiddenLabel") -> messagesProvider.messages("first.name"), Symbol("placeholder") -> messagesProvider.messages("first.name"), Symbol("class") -> "form-control input-lg")
+            @b4.text(signInForm("lastName"), Symbol("_hiddenLabel") -> messagesProvider.messages("last.name"), Symbol("placeholder") -> messagesProvider.messages("last.name"), Symbol("class") -> "form-control input-lg")
+            @b4.text(signInForm("email"), Symbol("_hiddenLabel") -> messagesProvider.messages("email"), Symbol("placeholder") -> messagesProvider.messages("email"), Symbol("class") -> "form-control input-lg")
+            @b4.password(signInForm("password"), Symbol("_hiddenLabel") -> messagesProvider.messages("password"), Symbol("placeholder") -> messagesProvider.messages("password"), Symbol("class") -> "form-control input-lg")
             <div class="form-group">
                 <div>
                     <button id="submit" type="submit" value="submit" class="btn btn-lg btn-primary btn-block">@messagesProvider.messages("sign.up")</button>
                 </div>
             </div>
             <div class="sign-in-now">
-                <p>@messagesProvider.messages("already.a.member") <a href="@routes.SignInController.view()">@messagesProvider.messages("sign.in.now")</a></p>
+                <p>@messagesProvider.messages("already.a.member") <a href="@routes.SignInController.view">@messagesProvider.messages("sign.in.now")</a></p>
             </div>
         }
     </fieldset>

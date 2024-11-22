@@ -1,7 +1,7 @@
 package models
 
-import com.mohiva.play.silhouette.api.services.IdentityService
-import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
+import play.silhouette.api.services.IdentityService
+import play.silhouette.impl.providers.CommonSocialProfile
 
 import scala.concurrent.Future
 

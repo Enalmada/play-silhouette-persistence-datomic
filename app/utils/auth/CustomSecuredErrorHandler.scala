@@ -1,6 +1,6 @@
 package utils.auth
 
-import com.mohiva.play.silhouette.api.actions.SecuredErrorHandler
+import play.silhouette.api.actions.SecuredErrorHandler
 import javax.inject.Inject
 import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
 import play.api.mvc.RequestHeader
@@ -24,7 +24,7 @@ class CustomSecuredErrorHandler @Inject() (val messagesApi: MessagesApi) extends
    * @return The result to send to the client.
    */
   override def onNotAuthenticated(implicit request: RequestHeader) = {
-    Future.successful(Redirect(controllers.security.web.routes.SignInController.view()))
+    Future.successful(Redirect(controllers.security.web.routes.SignInController.view))
   }
 
   /**
@@ -36,6 +36,6 @@ class CustomSecuredErrorHandler @Inject() (val messagesApi: MessagesApi) extends
    * @return The result to send to the client.
    */
   override def onNotAuthorized(implicit request: RequestHeader) = {
-    Future.successful(Redirect(controllers.security.web.routes.SignInController.view()).flashing("error" -> Messages("access.denied")))
+    Future.successful(Redirect(controllers.security.web.routes.SignInController.view).flashing("error" -> Messages("access.denied")))
   }
 }

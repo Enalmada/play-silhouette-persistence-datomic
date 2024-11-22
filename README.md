@@ -4,6 +4,7 @@ Play silhouette datomic persistence.
 Consult the [Silhouette documentation](http://silhouette.mohiva.com/docs) for more information. If you need help with the integration of Silhouette into your project, don't hesitate and ask questions in our [mailing list](https://groups.google.com/forum/#!forum/play-silhouette) or on [Stack Overflow](http://stackoverflow.com/questions/tagged/playframework).
 
 #### Version information
+* `2.9.5` to `2.9.x` (last: `0.2.1` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 * `2.7.0` to `2.7.x` (last: `0.1.8` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 * `2.6.0` to `2.6.x` (last: `0.1.7` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 * `2.5.0` to `2.5.x` (last: `0.1.3` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
@@ -22,21 +23,27 @@ curl -X POST http://localhost:9000/rest/signIn -H 'Content-Type: application/jso
 ```xml
 <dependency>
     <groupId>com.github.enalmada</groupId>
-    <artifactId>play-silhouette-persistence-datomic_2.12</artifactId>
-    <version>0.1.8</version>
+    <artifactId>play-silhouette-persistence-datomic_2.13</artifactId>
+    <version>0.2.3</version>
 </dependency>
 ```
 or
 
 ```scala
 val appDependencies = Seq(
-  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.1.8"
+  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.2.3"
 )
 ```
 
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
+* **0.2.3** [release on 2024-11-17]
+  * datomisca update
+* **0.2.2** [release on 2024-11-10]
+  * datomisca update
+* **0.2.1** [release on 2024-11-10]
+  * scala 2.13.15
 * **0.1.13** [release on 2019-12-30]
   * Silhouette 6.1.1 
 * **0.1.12** [release on 2019-12-16]
@@ -68,3 +75,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
+
+## Release
+sbt +publishSigned && sbt sonatypeRelease

@@ -1,8 +1,8 @@
 package persistence.datomic.daos
 
-import com.mohiva.play.silhouette.api.LoginInfo
-import com.mohiva.play.silhouette.impl.providers.OpenIDInfo
-import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
+import play.silhouette.api.LoginInfo
+import play.silhouette.impl.providers.OpenIDInfo
+import play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import datomisca.DatomicMapping._
 import datomisca._
 import datomiscadao.DB
@@ -12,7 +12,6 @@ import persistence.datomic.DatomicAuthService
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.reflectiveCalls
 import scala.reflect.ClassTag
-import Queries._
 
 /**
  * The DAO to persist the OAuth1 information.
@@ -20,8 +19,8 @@ import Queries._
 final class OpenIDInfoDAO @Inject() (implicit override val classTag: ClassTag[OpenIDInfo], myDatomisca: DatomicAuthService, ec: ExecutionContext)
   extends DelegableAuthInfoDAO[OpenIDInfo] {
 
-  implicit val conn = myDatomisca.conn
-  protected[this] val e = conn
+  implicit val conn: Connection = myDatomisca.conn
+  protected[this] val e: Connection = conn
 
   /**
    * Finds the auth info which is linked to the specified login info.
@@ -102,7 +101,7 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
     Schema.attributes.write[String].contramap(mapToString))(unlift(OpenIDInfo.unapply))
 
   def findWithId(loginInfo: LoginInfo)(implicit conn: Connection): Option[(Long, OpenIDInfo)] = {
-    val query = query"""
+    val query = Query("""
       [
         :find ?e
         :in $$ ?providerId ?providerKey
@@ -111,7 +110,7 @@ object OpenIDInfoImpl extends DB[OpenIDInfo] {
           [?l :loginInfo/providerKey ?providerKey]
           [?l :loginInfo/openIdInfo ?e]
       ]
-      """
+      """)
 
     DB.headOptionWithId(Datomic.q(query, Datomic.database(), loginInfo.providerID, loginInfo.providerKey), Datomic.database())
 

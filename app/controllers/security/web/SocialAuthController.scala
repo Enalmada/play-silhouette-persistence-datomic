@@ -1,21 +1,22 @@
 package controllers.security.web
 
-import com.mohiva.play.silhouette.api._
-import com.mohiva.play.silhouette.api.exceptions.ProviderException
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.util.Clock
-import com.mohiva.play.silhouette.impl.providers._
+import play.silhouette.api._
+import play.silhouette.api.exceptions.ProviderException
+import play.silhouette.api.repositories.AuthInfoRepository
+import play.silhouette.api.util.Clock
+import play.silhouette.impl.providers._
 import com.typesafe.config.Config
 import controllers.security.web.ConfigPimping._
+
 import javax.inject.Inject
 import models.UserService
 import play.api.Configuration
-import play.api.i18n.{ I18nSupport, Messages }
-import play.api.mvc.{ AbstractController, ControllerComponents }
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.auth.DefaultEnv
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.concurrent.duration.{ Duration, FiniteDuration }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration.{Duration, FiniteDuration}
 
 /**
  * The social auth controller.
@@ -26,15 +27,15 @@ import scala.concurrent.duration.{ Duration, FiniteDuration }
  * @param socialProviderRegistry The social provider registry.
  */
 class SocialAuthController @Inject() (
-  implicit
-  ec: ExecutionContext,
-  components: ControllerComponents,
-  silhouette: Silhouette[DefaultEnv],
-  userService: UserService,
-  authInfoRepository: AuthInfoRepository,
-  socialProviderRegistry: SocialProviderRegistry,
-  configuration: Configuration,
-  clock: Clock)
+                                       implicit
+                                       ec: ExecutionContext,
+                                       components: ControllerComponents,
+                                       silhouette: Silhouette[DefaultEnv],
+                                       userService: UserService,
+                                       authInfoRepository: AuthInfoRepository,
+                                       socialProviderRegistry: SocialProviderRegistry,
+                                       configuration: Configuration,
+                                       clock: Clock)
   extends AbstractController(components) with I18nSupport with Logger {
 
   /**
@@ -57,7 +58,7 @@ class SocialAuthController @Inject() (
             authenticator <- {
               silhouette.env.authenticatorService.create(profile.loginInfo).map { authenticator =>
                 authenticator.copy(
-                  expirationDateTime = clock.now.plus(c.getFiniteDuration("silhouette.authenticator.rememberMe.authenticatorExpiry").toMillis),
+                  expirationDateTime = clock.now.plus(java.time.Duration.ofMillis(c.getFiniteDuration("silhouette.authenticator.rememberMe.authenticatorExpiry").toMillis)),
                   idleTimeout = c.getOptionalFiniteDuration("silhouette.authenticator.rememberMe.authenticatorIdleTimeout"),
                   cookieMaxAge = c.getOptionalFiniteDuration("silhouette.authenticator.rememberMe.cookieMaxAge")
                 )
@@ -66,7 +67,7 @@ class SocialAuthController @Inject() (
             }
 
             value <- silhouette.env.authenticatorService.init(authenticator)
-            result <- silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.ApplicationController.index()))
+            result <- silhouette.env.authenticatorService.embed(value, Redirect(controllers.routes.ApplicationController.index))
           } yield {
             silhouette.env.eventBus.publish(LoginEvent(user, request))
             result
@@ -76,10 +77,11 @@ class SocialAuthController @Inject() (
     }).recover {
       case e: ProviderException =>
         logger.error("Unexpected provider error", e)
-        Redirect(routes.SignInController.view()).flashing("error" -> Messages("could.not.authenticate"))
+        Redirect(routes.SignInController.view).flashing("error" -> Messages("could.not.authenticate"))
     }
   }
 }
+
 
 object ConfigPimping {
 
