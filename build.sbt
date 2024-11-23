@@ -3,7 +3,7 @@
 
 name := "play-silhouette-seed"
 
-version := "5.0.0"
+version := "6.0.0"
 
 scalaVersion := "2.13.15"
 
@@ -17,7 +17,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 resolvers ++= Seq(Resolver.bintrayRepo("thyming", "maven"), "clojars" at "https://clojars.org/repo")
 
-val silhouetteVersion = "9.0.1"
+val silhouetteVersion = "10.0.1"
 
 libraryDependencies ++= Seq(
   guice,
@@ -31,11 +31,11 @@ libraryDependencies ++= Seq(
   "com.datomic" % "peer" % "1.0.7260",
   "com.github.enalmada" %% "datomisca-dao" % "0.2.5",
   //"org.webjars" %% "webjars-play" % "2.6.0-M1",
-  "net.codingwell" %% "scala-guice" % "4.2.11",
+  "net.codingwell" %% "scala-guice" % "6.0.0",
   "com.iheart" %% "ficus" % "1.5.2",
   "com.adrianhurt" %% "play-bootstrap" % "1.6.1-P28-B4",
-  "com.typesafe.play" %% "play-mailer" % "9.1.0",
-  "com.typesafe.play" %% "play-mailer-guice" % "9.1.0",
+  "org.playframework" %% "play-mailer" % "10.1.0",
+  "org.playframework" %% "play-mailer-guice" % "10.1.0",
   specs2 % Test,
   filters
 )

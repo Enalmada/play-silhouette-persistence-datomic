@@ -41,7 +41,7 @@ object LoginInfoImpl extends DB[LoginInfo] {
     val query = Query("""
     [
       :find ?l
-      :in $$ ?providerId ?providerKey
+      :in $ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]

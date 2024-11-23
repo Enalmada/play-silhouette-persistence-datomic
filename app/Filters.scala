@@ -1,4 +1,4 @@
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 import javax.inject.Inject
 import play.api.Mode
 import play.api.http.HttpFilters

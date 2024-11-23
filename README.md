@@ -4,6 +4,7 @@ Play silhouette datomic persistence.
 Consult the [Silhouette documentation](http://silhouette.mohiva.com/docs) for more information. If you need help with the integration of Silhouette into your project, don't hesitate and ask questions in our [mailing list](https://groups.google.com/forum/#!forum/play-silhouette) or on [Stack Overflow](http://stackoverflow.com/questions/tagged/playframework).
 
 #### Version information
+* `3.0.0` to `3.0.x` (last: `0.3.0` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 * `2.9.5` to `2.9.x` (last: `0.2.1` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 * `2.7.0` to `2.7.x` (last: `0.1.8` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
 * `2.6.0` to `2.6.x` (last: `0.1.7` - [master branch](https://github.com/enalmada/play-silhouette-persistence-datomic/tree/master))
@@ -24,20 +25,22 @@ curl -X POST http://localhost:9000/rest/signIn -H 'Content-Type: application/jso
 <dependency>
     <groupId>com.github.enalmada</groupId>
     <artifactId>play-silhouette-persistence-datomic_2.13</artifactId>
-    <version>0.2.3</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 or
 
 ```scala
 val appDependencies = Seq(
-  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.2.3"
+  "com.github.enalmada" %% "play-silhouette-persistence-datomic" % "0.3.0"
 )
 ```
 
 ## Versions
 * **TRUNK** [not released in the repository, yet]
   * Fancy contributing something? :-)
+* **0.3.0** [release on 2024-11-17]
+  * play 3.0.5
 * **0.2.3** [release on 2024-11-17]
   * datomisca update
 * **0.2.2** [release on 2024-11-10]
