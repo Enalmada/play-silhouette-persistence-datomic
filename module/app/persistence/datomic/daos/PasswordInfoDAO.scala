@@ -105,7 +105,7 @@ object PasswordInfoImpl extends DB[PasswordInfo] {
     val query = Query("""
     [
       :find ?e
-      :in $$ ?providerId ?providerKey
+      :in $ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]

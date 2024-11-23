@@ -1,14 +1,14 @@
 resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.9.5")
+addSbtPlugin("org.playframework" % "sbt-plugin" % "3.0.5")
 
 // web plugins
 
 // For sbt 1.1.x, and 0.13.x
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "2.5")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.12.2")
 
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.0.0")
+addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.3.0")
 
 // http://www.onegeek.com.au/scala/setting-up-travis-ci-for-scala
 /*

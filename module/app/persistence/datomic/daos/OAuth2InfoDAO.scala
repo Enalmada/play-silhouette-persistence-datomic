@@ -113,7 +113,7 @@ object OAuth2InfoImpl extends DB[OAuth2Info] {
     val query = Query("""
     [
       :find ?e
-      :in $$ ?providerId ?providerKey
+      :in $ ?providerId ?providerKey
       :where
         [?l :loginInfo/providerId ?providerId]
         [?l :loginInfo/providerKey ?providerKey]

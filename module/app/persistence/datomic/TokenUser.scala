@@ -59,7 +59,7 @@ object TokenUser extends DB[TokenUser] {
   }
 
   def findByEmail(email: String)(implicit conn: Connection): Seq[TokenUser] = {
-    val query = Query(""" [ :find ?a :in $$ ?email :where [?a :tokenUser/email ?email] ] """)
+    val query = Query(""" [ :find ?a :in $ ?email :where [?a :tokenUser/email ?email] ] """)
     list(Datomic.q(query, Datomic.database(), email))
   }
 

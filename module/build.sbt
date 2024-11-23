@@ -1,7 +1,7 @@
 
 name := """play-silhouette-persistence-datomic"""
 
-version := "0.2.3"
+version := "0.3.0"
 
 lazy val module = (project in file(".")).enablePlugins(PlayScala)
 
@@ -16,7 +16,7 @@ libraryDependencies ++= {
   val silhouetteVersion = if (scalaVersion.value.startsWith("2.12")) {
     "7.0.7"
   } else {
-    "9.0.1"
+    "10.0.1"
   }
 
   val commonDeps = Seq(
@@ -27,8 +27,8 @@ libraryDependencies ++= {
     "com.github.enalmada" %% "datomisca" % "0.8.5" % "provided",
     "com.datomic" % "peer" % "1.0.7260" % "provided",
     "com.github.enalmada" %% "datomisca-dao" % "0.2.5" % "provided",
-    "net.codingwell" %% "scala-guice" % "4.2.6" % "provided",
-    "com.iheart" %% "ficus" % "1.4.7" % "provided",
+    "net.codingwell" %% "scala-guice" % "6.0.0" % "provided",
+    "com.iheart" %% "ficus" % "1.5.2" % "provided",
   )
 
   commonDeps
